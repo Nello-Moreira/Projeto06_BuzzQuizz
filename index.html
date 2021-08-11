@@ -27,7 +27,132 @@
 
     <div id="quizz" class=""></div>
 
-    <div id="quizz-creation" class=""></div>
+    <div id="quizz-creation">
+        <div>
+            <h2>Comece pelo começo</h2>
+            <div class="question">
+                <input type="text" placeholder="Título do seu quizz">
+                <input type="url" placeholder="URL da imagem do seu quizz">
+                <input type="number" placeholder="Quantidade de perguntas do quizz" min="3">
+                <input type="number" placeholder="Quantidade de níveis do quizz" min="2">
+            </div>
+            <button onclick="">Prosseguir pra criar perguntas</button>
+        </div>
+
+        <div class="hidden">
+            <h2>Crie suas perguntas</h2>
+            <div class="question">
+                <div class="question-title-container">
+                    <h3>Pergunta 1</h3>
+                    <img class="hidden" src="./assets/edit.png" alt="Edit icon">
+                </div>
+                <div class="question-content-container">
+                    <div class="inputs">
+                        <input type="text" placeholder="Texto da pergunta">
+                        <input type="text" placeholder="Cor de fundo da pergunta">
+                    </div>
+
+                    <h3>Resposta correta</h3>
+                    <div class="inputs">
+                        <input type="text" placeholder="Resposta correta">
+                        <input type="text" placeholder="URL da imagem">
+                    </div>
+
+                    <h3>Respostas incorretas</h3>
+                    <div class="inputs">
+                        <input type="text" placeholder="Resposta incorreta 1">
+                        <input type="text" placeholder="URL da imagem 1">
+                    </div>
+                    <div class="inputs">
+                        <input type="text" placeholder="Resposta incorreta 2">
+                        <input type="text" placeholder="URL da imagem 2">
+                    </div>
+                    <div class="inputs">
+                        <input type="text" placeholder="Resposta incorreta 3">
+                        <input type="text" placeholder="URL da imagem 3">
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-title-container">
+                    <h3>Pergunta 2</h3>
+                    <img class="" src="./assets/edit.png" alt="Edit icon">
+                </div>
+                <div class="question-content-container hidden">
+                    <div class="inputs">
+                        <input type="text" placeholder="Texto da pergunta">
+                        <input type="text" placeholder="Cor de fundo da pergunta">
+                    </div>
+
+                    <h3>Resposta correta</h3>
+                    <div class="inputs">
+                        <input type="text" placeholder="Resposta correta">
+                        <input type="text" placeholder="URL da imagem">
+                    </div>
+
+                    <h3>Respostas incorretas</h3>
+                    <div class="inputs">
+                        <input type="text" placeholder="Resposta incorreta 1">
+                        <input type="text" placeholder="URL da imagem 1">
+                    </div>
+                    <div class="inputs">
+                        <input type="text" placeholder="Resposta incorreta 2">
+                        <input type="text" placeholder="URL da imagem 2">
+                    </div>
+                    <div class="inputs">
+                        <input type="text" placeholder="Resposta incorreta 3">
+                        <input type="text" placeholder="URL da imagem 3">
+                    </div>
+                </div>
+            </div>
+            <button onclick="">Prosseguir pra criar níveis</button>
+        </div>
+
+        <div class="hidden">
+            <h2>Agora, decida os níveis</h2>
+            <div class="question">
+                <div class="question-title-container">
+                    <h3>Nível 1</h3>
+                    <img class="hidden" src="./assets/edit.png" alt="Edit icon">
+                </div>
+                <div class="question-content-container">
+                    <div class="inputs">
+                        <input type="text" placeholder="Título do nível">
+                        <input type="number" placeholder="% de acerto mínima" min="0" max="100">
+                        <input type="text" placeholder="URL da imagem do nível">
+                        <textarea id="story" name="story" rows="2" placeholder="Descrição do nível"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-title-container">
+                    <h3>Nível 2</h3>
+                    <img class="" src="./assets/edit.png" alt="Edit icon">
+                </div>
+                <div class="question-content-container hidden">
+                    <div class="inputs">
+                        <input type="text" placeholder="Título do nível">
+                        <input type="number" placeholder="% de acerto mínima" min="0" max="100">
+                        <input type="text" placeholder="URL da imagem do nível">
+                        <textarea id="story" name="story" rows="2" placeholder="Descrição do nível"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="">Finalizar Quizz</button>
+        </div>
+
+        <div class="hidden">
+            <h2>Seu quizz está pronto!</h2>
+            <div class="quizz-cover">
+                <h2>Hey aqui</h2>
+            </div>
+            <button onclick="">Acessar Quizz</button>
+            <button class="back-to-home-button" onclick="">Voltar pra home</button>
+        </div>
+    </div>
 
 
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

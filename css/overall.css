@@ -4,6 +4,17 @@
 
 body {
     font-family: 'Roboto', sans-serif;
+    background-color: #FAFAFA;
+}
+
+h2 {
+    font-size: 23px;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: 700;
 }
 
 header {
@@ -24,5 +35,5 @@ header {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }

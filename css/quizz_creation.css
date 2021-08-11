@@ -1,3 +1,93 @@
 #quizz-creation {
-    margin: var(--header-height) auto 0;
+    margin: calc(var(--header-height) + 71px) auto 20px;
+    width: 600px;
+}
+
+#quizz-creation>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#quizz-creation h2 {
+    text-align: center;
+    margin-bottom: 29px;
+}
+
+.question {
+    box-sizing: border-box;
+    padding: 27px 17px;
+    background-color: rgba(255, 255, 255, 1);
+    margin-bottom: 25px;
+    width: 100%;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+}
+
+.question-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.question-title img{
+    width: 26px;
+    height: 23px;
+}
+
+.inputs {
+    margin: 15px 0;
+}
+
+#quizz-creation input, #quizz-creation textarea {
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 19px;
+    border: 1px solid rgba(209, 209, 209, 1);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    outline: none;
+}
+
+#quizz-creation input::placeholder, #quizz-creation textarea::placeholder {
+    font-style: italic;
+}
+
+#quizz-creation button {
+    font-size: 21px;
+    font-weight: 400;
+    color: rgba(255, 245, 244, 1);
+    width: 370px;
+    height: 54px;
+    margin: 50px auto 0;
+    border: none;
+    border-radius: 15px;
+    background-color: rgba(236, 54, 45, 1);
+}
+
+#quizz-creation button.back-to-home-button{
+    color: rgba(129, 129, 129, 1);
+    margin: 10px auto 0;
+    background-color: transparent;
+}
+
+#quizz-creation .quizz-cover{
+    box-sizing: border-box;
+    width: 500px;
+    height: 266px;
+    padding: 0 0 10px 25px;
+    border-radius: 5px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    background-image: url(../assets/quizz_cover_img.png);
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url(../assets/quizz_cover_img.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#quizz-creation .quizz-cover h2{
+    color:rgba(255, 255, 255, 1);
+    margin-bottom: 0;
 }
