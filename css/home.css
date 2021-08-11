@@ -6,7 +6,7 @@
     width: 1051px;
 }
 
-#home .quizz-creation{
+#home .create-quizz{
     width: 100%;
     height: 181px;
     font-weight: 400;
@@ -18,7 +18,7 @@
     margin-bottom: 77px;
 }
 
-h4{
+#home .create-quizz span{
     position: absolute;
     top: 37px;
     left: 50%;
@@ -31,7 +31,7 @@ h4{
 
 }
 
-#home .quizz-creation button{
+#home .create-quizz button{
     width: 151px;
     height: 40px;
     color: #ec362d;
@@ -49,7 +49,6 @@ h4{
 #home .all-quizzes,
 #home .user-quizzes{
     width: 100%;
-    background-color: rgba(0, 0, 0, 0);
 }
 
 #home .user-quizzes{
@@ -61,16 +60,14 @@ h4{
     margin-bottom: 12px;
 }
 
-#home .all-quizzes__list,
-#home .user-quizzes__list{
+#home .quizzes-list{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 15px;
 }
 
-#home .all-quizzes__list li,
-#home .user-quizzes__list li{
+#home .quizzes-list li{
     width: 340px;
     height: 181px; 
     position: relative;
@@ -78,8 +75,7 @@ h4{
     
 }
 
-#home .all-quizzes__list li::before,
-#home .user-quizzes__list li::before{
+#home .quizzes-list li::before{
     content: '';
     width: 100%;
     height: 100%;
@@ -90,8 +86,7 @@ h4{
     border-radius: 5px;
 }
 
-#home .all-quizzes__list span,
-#home .user-quizzes__list span{
+#home h4{
     position: absolute;
     left: 18px;
     bottom: 7px;
@@ -105,8 +100,7 @@ h4{
 
 }
 
-#home .all-quizzes__list img,
-#home .user-quizzes__list img{
+#home .quizzes-list img{
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -132,13 +126,12 @@ h4{
         width: calc(100vw - 17px * 2);
     }
 
-    #home .quizz-creation{
+    #home .create-quizz{
         margin-top: 31px;
         margin-bottom: 35px;
     }
 
-    #home .all-quizzes__list,
-    #home .user-quizzes__list{
+    #home .quizzes-list{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
