@@ -1,3 +1,7 @@
+:root {
+    --header-height: 69px;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
 }
@@ -8,7 +12,7 @@ header {
     color: rgba(255, 255, 255, 1);
     box-sizing: border-box;
     width: 100vw;
-    height: 69px;
+    height: var(--header-height);
     position: fixed;
     top: 0;
     z-index: 10;
