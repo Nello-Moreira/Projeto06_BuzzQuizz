@@ -1,6 +1,5 @@
 #home {
     margin: var(--header-height) auto 0;
-    background-color: #FAFAFA;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -19,7 +18,7 @@
     margin-bottom: 77px;
 }
 
-#home .quizz-creation span{
+h4{
     position: absolute;
     top: 37px;
     left: 50%;
