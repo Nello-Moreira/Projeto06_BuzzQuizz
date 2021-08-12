@@ -1,11 +1,17 @@
-const axiosBase = axios.create({
-    baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v3/buzzquizz/quizzes',
-});
-let serverQuizzesElement = document.querySelector('.server-quizzes .quizzes-list');
-let userQuizzesElement = document.querySelector('.user-quizzes .quizzes-list');
-serverQuizzesElement.innerHTML = '';
+import { axiosBase } from './overall.mjs';
+import { startQuizz } from './quizz_questions.mjs';
 
-getServerQuizzes();
+let homeScreenELement = document.querySelector('#home');
+let serverQuizzesElement = document.querySelector('.server-quizzes .quizzes-list');
+serverQuizzesElement.innerHTML = ''; //apagar no final
+let userQuizzesElement = document.querySelector('.user-quizzes .quizzes-list');
+
+
+
+ function startHomeClickEvents(){
+     serverQuizzesElement.addEventListener('click', getClickedQuizzID);
+     userQuizzesElement.addEventListener('click', getClickedQuizzID);
+ }
 
 function getServerQuizzes(){
     let promise = axiosBase.get();
@@ -15,14 +21,20 @@ function getServerQuizzes(){
 function renderServerQuizzes(quizzes){
     for (let i = 0; i < quizzes.data.length; i++) {
         serverQuizzesElement.innerHTML += `
-            <li>
+            <li name='quizz-ID-${quizzes.data[i].id}'>
                 <img src="${quizzes.data[i].image}" alt="">
-                <h4>${quizzes.data[i].title}</h4>
+                <h4 name='quizz-ID-${quizzes.data[i].id}'>${quizzes.data[i].title}</h4>
             </li>
         `
     }
 }
 
+function getClickedQuizzID(event){
+    let clickedQuizzID;
+    clickedQuizzID = Number(event.target.getAttribute('name').substring(9));
+    startQuizz(clickedQuizzID);
+}
 
 
-export {  };
+
+export { serverQuizzesElement, startHomeClickEvents, getServerQuizzes, getClickedQuizzID };
