@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="./css/reset.css">
     <link rel="stylesheet" href="./css/overall.css">
     <link rel="stylesheet" href="./css/home.css">
+    <link rel="stylesheet" href="./css/quizz_questions.css">
     <link rel="stylesheet" href="./css/quizz_user.css">
     <link rel="stylesheet" href="./css/quizz_creation.css">
 </head>
@@ -23,12 +24,12 @@
 <body>
     <header>BuzzQuizz</header>
 
-    <div id="home" class="">
+    <div id="home" class="hidden">
         <div class="create-quizz">
             <span>Você não criou nenhum quizz ainda :(</span>
             <button>Criar Quizz</button>
         </div>
-        <div class="user-quizzes hidden">
+        <div class="user-quizzes ">
             <div>
                 <h3>Seus Quizzes</h3>
                 <ion-icon class="add-quizz" name="add-circle"></ion-icon>
@@ -91,7 +92,36 @@
         </div>
     </div>
 
-    <div id="quizz" class=""></div>
+    <div id="quizz" class="">
+        <div class="quizz-header">
+            <img src="./assets/potter_castle.jpg" alt="">
+            <h1>O quão Potterhead é você?</h1>
+        </div>
+        <div class="quizz-question-container answered">
+            <div class="quizz-question-text-box">
+                <h2>Em qual animal Olho-Tonto Moody transfigurou Malfoy?</h2>
+            </div>
+            <ul class="quizz-answers">
+                <li class="answer-one right">
+                    <img src="./assets/furo.jpg" alt="">
+                    <h3>Furo</h3>
+                </li>
+                <li class="answer-two wrong selected">
+                    <img src="./assets/sapo.jpg" alt="">
+                    <h3>Sapo</h3>
+                </li>
+                <li class="answer-three wrong">
+                    <img src="./assets/rato.jpg" alt="">
+                    <h3>Rato</h3>
+                </li>
+                <li class="answer-four wrong">
+                    <img src="./assets/gato.jpg" alt="">
+                    <h3>Gato</h3>
+                </li>
+
+            </ul>
+        </div>
+    </div>
 
     <div id="quizz-creation" class="hidden">
         <div class="">
@@ -226,6 +256,7 @@
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module" src="./scripts/home.mjs"></script>
+    <script src="./scripts/quizz_questions.mjs"></script>
     <script type="module" src="./scripts/quizz_user.mjs"></script>
     <script type="module" src="./scripts/quizz_creation.mjs"></script>
     <script type="module" src="./scripts/overall.mjs"></script>
