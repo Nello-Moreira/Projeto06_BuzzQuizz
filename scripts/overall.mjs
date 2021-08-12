@@ -7,13 +7,12 @@ const axiosBase = axios.create({
 });
 
 
-const quizzScreenElement = document.querySelector('#quizz');
-const creationScreenElement = document.querySelector('#quizz-creation');
+const quizzPageElement = document.querySelector('#quizz');
+const creationPageElement = document.querySelector('#quizz-creation');
 
 
 
 getServerQuizzes();
-//console.log(serverQuizzesElement);
 startHomeClickEvents();
 
 export { axiosBase };

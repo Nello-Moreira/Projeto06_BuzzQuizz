@@ -1,7 +1,7 @@
 import { axiosBase } from './overall.mjs';
 import { startQuizz } from './quizz_questions.mjs';
 
-let homeScreenELement = document.querySelector('#home');
+let homePageELement = document.querySelector('#home');
 let serverQuizzesElement = document.querySelector('.server-quizzes .quizzes-list');
 serverQuizzesElement.innerHTML = ''; //apagar no final
 let userQuizzesElement = document.querySelector('.user-quizzes .quizzes-list');
@@ -32,9 +32,18 @@ function renderServerQuizzes(quizzes){
 function getClickedQuizzID(event){
     let clickedQuizzID;
     clickedQuizzID = Number(event.target.getAttribute('name').substring(9));
+    hideHomePage(true);
     startQuizz(clickedQuizzID);
 }
 
-
+function hideHomePage(hide){
+    if (hide === true){
+        homePageELement.classList.add('hidden');
+    }
+    else if (hide === false){
+        homePageELement.classList.remove('hidden');
+    }
+    
+}
 
 export { serverQuizzesElement, startHomeClickEvents, getServerQuizzes, getClickedQuizzID };
