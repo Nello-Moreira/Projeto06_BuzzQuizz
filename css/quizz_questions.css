@@ -1,0 +1,114 @@
+#quizz{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#quizz h1{
+    font-size: 39px;
+    font-weight: 400;
+    position: absolute;
+    color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+#quizz h2{
+    width: 623px;
+    height: 83px;
+    font-size: 23px;
+    font-weight: 700;
+    position: absolute;
+    color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    
+}
+
+#quizz h3{
+    font-size: 20px;
+    font-weight: 700;
+    color: black;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    margin-top: 7.75px;
+    margin-bottom: 18.61px;
+}
+
+#quizz .quizz-header {
+    width: 100%;
+    height: 227px;
+    position: relative;
+}
+
+#quizz .quizz-header::before{
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.60), rgba(0, 0, 0, 0.60));
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#quizz .quizz-header img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#quizz .quizz-question-container{
+    box-sizing: border-box;
+    width: 759px;
+    margin-top: 42px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+    padding: 28px 36px;
+}
+
+.quizz-question-text-box{
+    background-color: #434CA0;
+    width: 100%;
+    height: 137.99px;
+    position: relative;
+    margin-bottom: 20.26px;
+}
+
+.quizz-answers{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.quizz-answers li{
+    display: flex;
+    flex-direction: column;
+}
+
+.quizz-answers li img{
+    width: 331.94px;
+    height: 175.2px;
+    object-fit: cover;
+}
+
+#quizz .quizz-question-container.answered li{
+    opacity: 0.3;
+}
+
+#quizz .quizz-question-container.answered li.selected{
+    opacity: 1 !important;
+}
+
+#quizz .quizz-question-container.answered li.right h3{
+    color: #009c22 !important;
+}
+
+#quizz .quizz-question-container.answered li.wrong h3{
+    color: #ff4b4b !important;
+}
