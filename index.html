@@ -27,14 +27,14 @@
 
     <div id="quizz" class=""></div>
 
-    <div id="quizz-creation">
-        <div>
+    <div id="quizz-creation" class="hidden">
+        <div class="">
             <h2>Comece pelo começo</h2>
             <div class="question">
                 <input type="text" placeholder="Título do seu quizz">
                 <input type="url" placeholder="URL da imagem do seu quizz">
-                <input type="number" placeholder="Quantidade de perguntas do quizz" min="3">
-                <input type="number" placeholder="Quantidade de níveis do quizz" min="2">
+                <input type="number" placeholder="Quantidade de perguntas do quizz">
+                <input type="number" placeholder="Quantidade de níveis do quizz">
             </div>
             <button onclick="">Prosseguir pra criar perguntas</button>
         </div>
@@ -119,9 +119,9 @@
                 <div class="question-content-container">
                     <div class="inputs">
                         <input type="text" placeholder="Título do nível">
-                        <input type="number" placeholder="% de acerto mínima" min="0" max="100">
+                        <input type="number" placeholder="% de acerto mínima">
                         <input type="text" placeholder="URL da imagem do nível">
-                        <textarea id="story" name="story" rows="2" placeholder="Descrição do nível"></textarea>
+                        <textarea class="level-description" name="level-description" rows="2" placeholder="Descrição do nível"></textarea>
                     </div>
                 </div>
             </div>
@@ -134,9 +134,9 @@
                 <div class="question-content-container hidden">
                     <div class="inputs">
                         <input type="text" placeholder="Título do nível">
-                        <input type="number" placeholder="% de acerto mínima" min="0" max="100">
+                        <input type="number" placeholder="% de acerto mínima">
                         <input type="text" placeholder="URL da imagem do nível">
-                        <textarea id="story" name="story" rows="2" placeholder="Descrição do nível"></textarea>
+                        <textarea class="level-description" name="level-description" rows="2" placeholder="Descrição do nível"></textarea>
                     </div>
                 </div>
             </div>
@@ -147,6 +147,7 @@
         <div class="hidden">
             <h2>Seu quizz está pronto!</h2>
             <div class="quizz-cover">
+                <img src="./assets/quizz_cover_img.png">
                 <h2>Hey aqui</h2>
             </div>
             <button onclick="">Acessar Quizz</button>
