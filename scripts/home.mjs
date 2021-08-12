@@ -46,4 +46,4 @@ function hideHomePage(hide){
     
 }
 
-export { serverQuizzesElement, startHomeClickEvents, getServerQuizzes, getClickedQuizzID };
+export { startHomeClickEvents, getServerQuizzes };
