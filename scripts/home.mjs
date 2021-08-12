@@ -22,11 +22,8 @@ function renderServerQuizzes(quizzes){
                 <h4>${quizzes.data[i].title}</h4>
             </li>
         `
-        
     }
 }
-
-
 
 
 
