@@ -10,15 +10,8 @@
 }
 
 #quizz-creation h2 {
-    font-size: 23px;
-    font-weight: 700;
     text-align: center;
     margin-bottom: 29px;
-}
-
-#quizz-creation h3 {
-    font-size: 20px;
-    font-weight: 700;
 }
 
 .question {
@@ -54,28 +47,15 @@
     margin-bottom: 10px;
     padding: 10px;
     outline: none;
+    resize: vertical;
 }
 
 #quizz-creation input::placeholder, #quizz-creation textarea::placeholder {
     font-style: italic;
 }
 
-#quizz-creation button {
-    font-size: 21px;
-    font-weight: 400;
-    color: rgba(255, 245, 244, 1);
-    width: 370px;
-    height: 54px;
-    margin: 50px auto 0;
-    border: none;
-    border-radius: 15px;
-    background-color: rgba(236, 54, 45, 1);
-}
-
-#quizz-creation button.back-to-home-button {
-    color: rgba(129, 129, 129, 1);
-    margin: 10px auto 0;
-    background-color: transparent;
+#quizz-creation .invalid {
+    background-color: rgb(255, 210, 210);
 }
 
 #quizz-creation .quizz-cover {

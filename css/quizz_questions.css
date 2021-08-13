@@ -29,8 +29,6 @@
 #quizz h2{
     width: calc(100% - 32px * 2);
     height: calc(100% - 23px * 2);
-    font-size: 23px;
-    font-weight: 700;
     position: absolute;
     color: white;
     top: 50%;
@@ -43,8 +41,6 @@
 }
 
 #quizz h3{
-    font-size: 20px;
-    font-weight: 700;
     color: black;
     height: 34px;
     display: flex;

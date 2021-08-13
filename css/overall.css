@@ -24,6 +24,37 @@ header {
     align-items: center;
 }
 
+h2 {
+    font-size: 23px;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+button {
+    font-size: 21px;
+    font-weight: 400;
+    width: 370px;
+    height: 54px;
+    border: none;
+    border-radius: 15px;
+}
+
 .hidden {
     display: none !important;
+}
+
+.gray-button {
+    color: rgba(129, 129, 129, 1);
+    margin: 10px auto 0;
+    background-color: transparent;
+}
+
+.red-button {
+    color: rgba(255, 245, 244, 1);
+    margin: 50px auto 0;
+    background-color: rgba(236, 54, 45, 1);
 }
