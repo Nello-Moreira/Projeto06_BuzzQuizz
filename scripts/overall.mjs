@@ -12,4 +12,3 @@ getServerQuizzes();
 startHomeClickEvents();
 activeFormEvent();
 activeNextButtonsEvent();
-activeQuestionEvent();

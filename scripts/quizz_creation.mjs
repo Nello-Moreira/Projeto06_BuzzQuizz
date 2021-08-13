@@ -66,6 +66,7 @@ function removeFormEvent() {
 
 function checkIfAllValid(section) {
     const forms = section.querySelectorAll("form");
+    console.log(forms);
     let formElement;
     let questionContentContainer;
     let questionElement;
@@ -74,9 +75,8 @@ function checkIfAllValid(section) {
         formElement = forms[formIndex];
 
         if (!formElement.reportValidity()) {
-            questionContentContainer = formElement.parentElement
-            if (questionContentContainer.classList.contains("hidden")) {
-                questionElement = questionContentContainer.parentElement
+            if (formElement.classList.contains("hidden")) {
+                questionElement = formElement.parentElement
                 questionElement.classList.add("invalid");
             }
             return false;
@@ -105,6 +105,122 @@ function goBackToHome(event) {
     backToHome = true;
 }
 
+function createQuestionTitleContainer(questionNumber) {
+    const titleContainer = document.createElement("div");
+    const title = document.createElement("h3");
+    const editionIcon = document.createElement("img");
+
+    title.innerHTML = "Pergunta " + questionNumber;
+
+    editionIcon.classList.add("hidden");
+    editionIcon.src = "./assets/edit.png";
+    
+    titleContainer.classList.add("question-title-container");
+    
+    titleContainer.appendChild(title);
+    titleContainer.appendChild(editionIcon);
+    
+    return titleContainer;
+}
+
+function createQuestionContainer(questionClasses){
+    const questionContainer = document.createElement("div");
+    const questionTextInput = document.createElement("input");
+    const questionColorInput = document.createElement("input");
+
+    questionTextInput.type = "text";
+    questionTextInput.placeholder = "Texto da pergunta";
+    questionTextInput.minLength = "20";
+    questionTextInput.required = true;
+
+    questionColorInput.type = "text";
+    questionColorInput.placeholder = "Cor de fundo da pergunta (hexadecimal, ex: #fafafa)";
+    questionColorInput.pattern = "#[A-f]{6}";
+    questionColorInput.required = true;
+
+    for (let singleClass of questionClasses) {
+        questionContainer.classList.add(singleClass);
+    }
+
+    questionContainer.appendChild(questionTextInput);
+    questionContainer.appendChild(questionColorInput);
+
+    return questionContainer;
+}
+
+function createAnswers(numberOfAnswers, answerClasses) {
+    const ul = document.createElement("ul");
+    let li;
+    let answerTextInput;
+    let answerImgInput;
+
+    for (let i = 0; i < numberOfAnswers; i++) {
+        li = document.createElement("li");
+        answerTextInput = document.createElement("input");
+        answerImgInput = document.createElement("input");
+
+        answerTextInput.type = "text";
+        answerImgInput.type = "url";
+
+        if (answerClasses.includes("correct-answer")) {
+            answerTextInput.placeholder = "Resposta correta ";
+            answerImgInput.placeholder = "URL da imagem";
+        } else {
+            answerTextInput.placeholder = "Resposta incorreta " + (i + 1);
+            answerImgInput.placeholder = "URL da imagem " + (i + 1);
+        }
+
+        if (i === 0) {
+            answerTextInput.required = true;
+            answerImgInput.required = true;
+        }
+
+        for (let singleClass of answerClasses) {
+            li.classList.add(singleClass);
+        }
+
+        li.appendChild(answerTextInput);
+        li.appendChild(answerImgInput);
+        ul.appendChild(li);
+    }
+    return ul;
+}
+
+function createQuestionContentContainer() {
+    const contentContainer = document.createElement("form");
+    const questionInputsContainer = createQuestionContainer(["inputs"]);
+    const correctAnswerTitle = document.createElement("h3");
+    const wrongAnswerTitle = document.createElement("h3");
+    const correctAnswerContainer = createAnswers(1, ["inputs", "correct-answer"]);
+    const wrongAnswersContainer = createAnswers(3, ["inputs", "wrong-answer"]);
+
+    correctAnswerTitle.innerHTML = "Resposta correta";
+    wrongAnswerTitle.innerHTML = "Respostas incorretas";
+
+    contentContainer.classList.add("question-content-container");
+    
+    contentContainer.appendChild(questionInputsContainer);
+    contentContainer.appendChild(correctAnswerTitle);
+    contentContainer.appendChild(correctAnswerContainer);
+    contentContainer.appendChild(wrongAnswerTitle);
+    contentContainer.appendChild(wrongAnswersContainer);
+
+    return contentContainer;
+}
+
+function createquestions(sectionElement) {
+    const endOfSectioButton = sectionElement.querySelector("button");
+    const questionContainer = document.createElement("div");
+
+    questionContainer.classList.add("question");
+
+    questionContainer.appendChild(createQuestionTitleContainer(1));
+    questionContainer.appendChild(createQuestionContentContainer());
+    sectionElement.insertBefore(questionContainer, endOfSectioButton);
+}
+
+function createlevels(sectionElement) { }
+
 function openNextSection(event) {
     const button = event.target;
     const sectionElement = button.parentElement;
@@ -113,11 +229,21 @@ function openNextSection(event) {
     if (checkIfAllValid(sectionElement)) {
         sectionElement.classList.add("hidden");
         sectionElement.nextElementSibling.classList.remove("hidden");
+
+        if (sectionElement === allSections[creationPage.section.settings]) {
+            createquestions(allSections[creationPage.section.questions]);
+            activeQuestionEvent(allSections[creationPage.section.questions]);
+        }
+
+        if (sectionElement === allSections[creationPage.section.questions]) {
+            createlevels(allSections[creationPage.section.levels]);
+        }
+
+        if (sectionElement === allSections[creationPage.section.levels]) {
+            refreshQuizzCoverPage(allSections[creationPage.section.endSection]);
+        }
     }
 
-    if (sectionElement.nextElementSibling === allSections[creationPage.section.endSection]) {
-        refreshQuizzCoverPage(allSections[creationPage.section.endSection]);
-    }
 }
 
 function activeNextButtonsEvent() {
@@ -171,9 +297,8 @@ function clickToHideQuestion(event) {
     questionTitle.parentElement.classList.remove("invalid");
 }
 
-function activeQuestionEvent() {
-    const page = document.querySelector("#quizz-creation");
-    const questions = page.querySelectorAll(".question-title-container");
+function activeQuestionEvent(sectionElement) {
+    const questions = sectionElement.querySelectorAll(".question-title-container");
     let questionTitleText = "";
     let questionTitleImage = "";
 
