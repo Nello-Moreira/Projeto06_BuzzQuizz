@@ -1,3 +1,4 @@
+import { scrollToHeader } from './overall.mjs';
 import { axiosBase } from './overall.mjs';
 import { startQuizz, hideQuizzPage } from './quizz_questions.mjs';
 
@@ -51,10 +52,13 @@ function backToHomePage(){
     hideCreationPage(true);
     hideQuizzPage(true);
     hideHomePage(false);
+    scrollToHeader();
     getServerQuizzes();
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////
+///////////////////////////colocar em quizz creation ////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 let creationPageELement = document.querySelector('#quizz-creation');
 
 function startCreation(){
@@ -70,5 +74,5 @@ function hideCreationPage(hide){
         creationPageELement.classList.remove('hidden');
     }
 }
-
+//////////////////////////////////////////////////////////////////////////////////////
 export { startHomeClickEvents, getServerQuizzes, backToHomePage };

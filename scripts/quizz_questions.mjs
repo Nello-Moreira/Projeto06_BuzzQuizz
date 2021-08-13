@@ -1,11 +1,12 @@
-import { axiosBase } from './overall.mjs';
+import { axiosBase, scrollToHeader } from './overall.mjs';
 import { backToHomePage } from './home.mjs';
 
 let quizzPageElement = document.querySelector('#quizz');
 let activeQuizzElement = quizzPageElement.querySelector('.active-quizz-container');
 let activeQuizzObject = {};
-
+//////////// testar se isso não buga ao chamar em overall
 startQuizzClickEvents();
+///////////////////
 
 function startQuizzClickEvents(){
     activeQuizzElement.addEventListener('click', filterClickedElement);
@@ -46,6 +47,7 @@ function hideQuizzPage(hide){
 function startQuizz(quizzID){
     hideQuizzPage(false);
     getQuestions(quizzID);
+    scrollToHeader();
 }
 
 function getQuestions(quizzID){
