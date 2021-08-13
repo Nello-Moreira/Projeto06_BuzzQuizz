@@ -66,7 +66,6 @@ function removeFormEvent() {
 
 function checkIfAllValid(section) {
     const forms = section.querySelectorAll("form");
-    console.log(forms);
     let formElement;
     let questionContentContainer;
     let questionElement;
@@ -114,16 +113,16 @@ function createQuestionTitleContainer(questionNumber) {
 
     editionIcon.classList.add("hidden");
     editionIcon.src = "./assets/edit.png";
-    
+
     titleContainer.classList.add("question-title-container");
-    
+
     titleContainer.appendChild(title);
     titleContainer.appendChild(editionIcon);
-    
+
     return titleContainer;
 }
 
-function createQuestionContainer(questionClasses){
+function createQuestionContainer(questionClasses) {
     const questionContainer = document.createElement("div");
     const questionTextInput = document.createElement("input");
     const questionColorInput = document.createElement("input");
@@ -169,7 +168,6 @@ function createAnswers(numberOfAnswers, answerClasses) {
             answerTextInput.placeholder = "Resposta incorreta " + (i + 1);
             answerImgInput.placeholder = "URL da imagem " + (i + 1);
         }
-
         if (i === 0) {
             answerTextInput.required = true;
             answerImgInput.required = true;
@@ -198,7 +196,7 @@ function createQuestionContentContainer() {
     wrongAnswerTitle.innerHTML = "Respostas incorretas";
 
     contentContainer.classList.add("question-content-container");
-    
+
     contentContainer.appendChild(questionInputsContainer);
     contentContainer.appendChild(correctAnswerTitle);
     contentContainer.appendChild(correctAnswerContainer);
@@ -210,13 +208,22 @@ function createQuestionContentContainer() {
 
 function createquestions(sectionElement) {
     const endOfSectioButton = sectionElement.querySelector("button");
-    const questionContainer = document.createElement("div");
+    const settingsSection = (sectionElement.parentElement.children)[creationPage.section.settings];
+    const numberOfQuestions = settingsSection.querySelector("input[type='number']").value;
+    let questionContainer;
 
-    questionContainer.classList.add("question");
+    for (let i = 0; i < numberOfQuestions; i++) {
+        questionContainer = document.createElement("div");
+        questionContainer.classList.add("question");
 
-    questionContainer.appendChild(createQuestionTitleContainer(1));
-    questionContainer.appendChild(createQuestionContentContainer());
-    sectionElement.insertBefore(questionContainer, endOfSectioButton);
+        questionContainer.appendChild(createQuestionTitleContainer(i + 1));
+        questionContainer.appendChild(createQuestionContentContainer());
+        sectionElement.insertBefore(questionContainer, endOfSectioButton);
+
+        if (i !== 0) {
+            changeQuestionVisibility(questionContainer);
+        }
+    }
 }
 
 function createlevels(sectionElement) { }
@@ -234,16 +241,13 @@ function openNextSection(event) {
             createquestions(allSections[creationPage.section.questions]);
             activeQuestionEvent(allSections[creationPage.section.questions]);
         }
-
         if (sectionElement === allSections[creationPage.section.questions]) {
             createlevels(allSections[creationPage.section.levels]);
         }
-
         if (sectionElement === allSections[creationPage.section.levels]) {
             refreshQuizzCoverPage(allSections[creationPage.section.endSection]);
         }
     }
-
 }
 
 function activeNextButtonsEvent() {
@@ -280,27 +284,39 @@ function removeNextButtonsEvent() {
     }
 }
 
-function clickToHideQuestion(event) {
-    let questionTitle = "";
-
-    if (event.target.classList.contains("question-title-container")) {
-        questionTitle = event.target;
-    } else {
-        questionTitle = event.target.parentElement;
-    }
-
+function changeQuestionVisibility(question) {
+    const questionTitle = question.querySelector(".question-title-container")
     const editionIcon = questionTitle.querySelector("img");
-    const questionContent = questionTitle.nextElementSibling;
+    const questionForm = question.querySelector("form");
 
     editionIcon.classList.toggle("hidden");
-    questionContent.classList.toggle("hidden");
-    questionTitle.parentElement.classList.remove("invalid");
+    questionForm.classList.toggle("hidden");
+    question.classList.remove("invalid");
+}
+
+function getQuestionFromClick(event) {
+    if (event.target.classList.contains("question")) {
+        return event.target;
+    }
+    if (event.target.classList.contains("question-title-container")) {
+        return event.target.parentElement;
+    }
+    if (event.target.parentElement.classList.contains("question-title-container")) {
+        return event.target.parentElement.parentElement;
+    }
+    return false;
+}
+
+function clickToHideQuestion(event) {
+    const question = getQuestionFromClick(event);
+
+    if (question) {
+        changeQuestionVisibility(question);
+    }
 }
 
 function activeQuestionEvent(sectionElement) {
-    const questions = sectionElement.querySelectorAll(".question-title-container");
-    let questionTitleText = "";
-    let questionTitleImage = "";
+    const questions = sectionElement.querySelectorAll(".question");
 
     for (let i = 0; i < questions.length; i++) {
         questions[i].addEventListener("click", clickToHideQuestion);
