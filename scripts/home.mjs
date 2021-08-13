@@ -3,9 +3,7 @@ import { startQuizz, hideQuizzPage } from './quizz_questions.mjs';
 
 let homePageELement = document.querySelector('#home');
 let serverQuizzesElement = document.querySelector('.server-quizzes .quizzes-list');
-serverQuizzesElement.innerHTML = ''; //apagar no final
 let userQuizzesElement = document.querySelector('.user-quizzes .quizzes-list');
-
 
 
 function startHomeClickEvents(){
@@ -21,6 +19,7 @@ function getServerQuizzes(){
 }
 
 function renderServerQuizzes(quizzes){
+    serverQuizzesElement.innerHTML = '';
     for (let i = 0; i < quizzes.data.length; i++) {
         serverQuizzesElement.innerHTML += `
             <li name='quizz-ID-${quizzes.data[i].id}'>
