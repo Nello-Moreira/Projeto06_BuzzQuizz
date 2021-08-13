@@ -8,10 +8,10 @@ let userQuizzesElement = document.querySelector('.user-quizzes .quizzes-list');
 
 
 
- function startHomeClickEvents(){
+function startHomeClickEvents(){
      serverQuizzesElement.addEventListener('click', getClickedQuizzID);
      userQuizzesElement.addEventListener('click', getClickedQuizzID);
- }
+}
 
 function getServerQuizzes(){
     let promise = axiosBase.get();

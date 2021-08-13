@@ -3,6 +3,31 @@ import { axiosBase } from './overall.mjs';
 let quizzPageElement = document.querySelector('#quizz');
 let activeQuizz = quizzPageElement.querySelector('.active-quizz-container');
 
+startQuizzClickEvents();
+
+function startQuizzClickEvents(){
+    activeQuizz.addEventListener('click', filterClickedElement);
+}
+
+
+function isAnswered(event){
+    let questionElement = event.parentNode.parentNode.parentNode;
+    return (questionElement.classList.contains('answered')); 
+}
+
+function isAnswer(event){
+    let elementTag = event.parentNode.tagName;
+    return (elementTag === 'LI');
+}
+
+function filterClickedElement(event){
+    if (isAnswer(event.target) && !isAnswered(event.target)) { 
+            setQuestionAnswered(event.target);
+    }
+}
+
+
+
 function hideQuizzPage(hide){
     if (hide === true){
         quizzPageElement.classList.add('hidden');
@@ -12,7 +37,6 @@ function hideQuizzPage(hide){
     }
     
 }
-
 
 function startQuizz(quizzID){
     hideQuizzPage(false);
@@ -55,7 +79,7 @@ function renderQuestions(value){
         value.data.questions[questionN].answers.forEach((answer) => {
             console.log(answer);
             quizzAnswers.innerHTML += `
-                <li class="">
+                <li class="${specifyAnswerColor(answer.isCorrectAnswer)}">
                     <img src="${answer.image}" alt="">
                     <h3>${answer.text}</h3>
                 </li>
@@ -63,25 +87,26 @@ function renderQuestions(value){
         });
     }
 
+}
 
-    
+function specifyAnswerColor(isCorrectAnswer){
+    if (isCorrectAnswer){
+        return 'right-green';
+    }
+    else if(!isCorrectAnswer){
+        return 'wrong-red';
+    }
+}
 
-function addCorrectAnswerClass(isCorrectAnswer){
-
+function setQuestionAnswered(selectedAnswer){
+    selectedAnswer.parentNode.classList.add('selected');
+    selectedAnswer.parentNode.parentNode.parentNode.classList.add('answered');
 }
     
 function sortAnswers(array){
-    array.sort(compareFunction);
-}
-
-
-
-
-function compareFunction() { 
-	return Math.random() - 0.5; 
-}
-
-
+    array.sort(function(){
+        return Math.random() - 0.5; 
+    });
 }
 
 export { startQuizz };

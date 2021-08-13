@@ -121,11 +121,11 @@
     opacity: 1 !important;
 }
 
-#quizz .quizz-question-container.answered li.right h3{
+#quizz .quizz-question-container.answered li.right-green h3{
     color: #009c22 !important;
 }
 
-#quizz .quizz-question-container.answered li.wrong h3{
+#quizz .quizz-question-container.answered li.wrong-red h3{
     color: #ff4b4b !important;
 }
 
