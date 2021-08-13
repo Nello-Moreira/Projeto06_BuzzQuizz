@@ -27,3 +27,24 @@ header {
 .hidden {
     display: none !important;
 }
+
+button {
+    font-size: 21px;
+    font-weight: 400;
+    width: 370px;
+    height: 54px;
+    border: none;
+    border-radius: 15px;
+}
+
+.gray-button {
+    color: rgba(129, 129, 129, 1);
+    margin: 10px auto 0;
+    background-color: transparent;
+}
+
+.red-button {
+    color: rgba(255, 245, 244, 1);
+    margin: 50px auto 0;
+    background-color: rgba(236, 54, 45, 1);
+}

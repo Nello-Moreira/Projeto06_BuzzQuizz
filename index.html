@@ -126,12 +126,14 @@
         <div class="">
             <h2>Comece pelo começo</h2>
             <div class="question">
-                <input type="text" placeholder="Título do seu quizz">
-                <input type="url" placeholder="URL da imagem do seu quizz">
-                <input type="number" placeholder="Quantidade de perguntas do quizz">
-                <input type="number" placeholder="Quantidade de níveis do quizz">
+                <form>
+                    <input type="text" placeholder="Título do seu quizz" minlength="20" maxlength="65" required>
+                    <input type="url" placeholder="URL da imagem do seu quizz" required>
+                    <input type="number" placeholder="Quantidade de perguntas do quizz" min="3" required>
+                    <input type="number" placeholder="Quantidade de níveis do quizz" min="2" required>
+                </form>
             </div>
-            <button onclick="">Prosseguir pra criar perguntas</button>
+            <button class="red-button">Prosseguir pra criar perguntas</button>
         </div>
 
         <div class="hidden">
@@ -142,30 +144,32 @@
                     <img class="hidden" src="./assets/edit.png" alt="Edit icon">
                 </div>
                 <div class="question-content-container">
-                    <div class="inputs">
-                        <input type="text" placeholder="Texto da pergunta">
-                        <input type="text" placeholder="Cor de fundo da pergunta">
-                    </div>
+                    <form>
+                        <div class="inputs">
+                            <input type="text" placeholder="Texto da pergunta" minlength="20" required>
+                            <input type="text" placeholder="Cor de fundo da pergunta" pattern="#[A-f]{6}" required>
+                        </div>
 
-                    <h3>Resposta correta</h3>
-                    <div class="inputs">
-                        <input type="text" placeholder="Resposta correta">
-                        <input type="text" placeholder="URL da imagem">
-                    </div>
+                        <h3>Resposta correta</h3>
+                        <div class="inputs">
+                            <input type="text" placeholder="Resposta correta" required>
+                            <input type="url" placeholder="URL da imagem" required>
+                        </div>
 
-                    <h3>Respostas incorretas</h3>
-                    <div class="inputs">
-                        <input type="text" placeholder="Resposta incorreta 1">
-                        <input type="text" placeholder="URL da imagem 1">
-                    </div>
-                    <div class="inputs">
-                        <input type="text" placeholder="Resposta incorreta 2">
-                        <input type="text" placeholder="URL da imagem 2">
-                    </div>
-                    <div class="inputs">
-                        <input type="text" placeholder="Resposta incorreta 3">
-                        <input type="text" placeholder="URL da imagem 3">
-                    </div>
+                        <h3>Respostas incorretas</h3>
+                        <div class="inputs">
+                            <input type="text" placeholder="Resposta incorreta 1" required>
+                            <input type="url" placeholder="URL da imagem 1" required>
+                        </div>
+                        <div class="inputs">
+                            <input type="text" placeholder="Resposta incorreta 2" required>
+                            <input type="url" placeholder="URL da imagem 2" required>
+                        </div>
+                        <div class="inputs">
+                            <input type="text" placeholder="Resposta incorreta 3" required>
+                            <input type="url" placeholder="URL da imagem 3" required>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -175,33 +179,36 @@
                     <img class="" src="./assets/edit.png" alt="Edit icon">
                 </div>
                 <div class="question-content-container hidden">
-                    <div class="inputs">
-                        <input type="text" placeholder="Texto da pergunta">
-                        <input type="text" placeholder="Cor de fundo da pergunta">
-                    </div>
+                    <form>
+                        <div class="inputs">
+                            <input type="text" placeholder="Texto da pergunta" minlength="20" required>
+                            <input type="text" placeholder="Cor de fundo da pergunta" pattern="#[A-f]{6}" required>
+                        </div>
 
-                    <h3>Resposta correta</h3>
-                    <div class="inputs">
-                        <input type="text" placeholder="Resposta correta">
-                        <input type="text" placeholder="URL da imagem">
-                    </div>
+                        <h3>Resposta correta</h3>
+                        <div class="inputs">
+                            <input type="text" placeholder="Resposta correta" required>
+                            <input type="url" placeholder="URL da imagem" required>
+                        </div>
 
-                    <h3>Respostas incorretas</h3>
-                    <div class="inputs">
-                        <input type="text" placeholder="Resposta incorreta 1">
-                        <input type="text" placeholder="URL da imagem 1">
-                    </div>
-                    <div class="inputs">
-                        <input type="text" placeholder="Resposta incorreta 2">
-                        <input type="text" placeholder="URL da imagem 2">
-                    </div>
-                    <div class="inputs">
-                        <input type="text" placeholder="Resposta incorreta 3">
-                        <input type="text" placeholder="URL da imagem 3">
-                    </div>
+                        <h3>Respostas incorretas</h3>
+                        <div class="inputs">
+                            <input type="text" placeholder="Resposta incorreta 1" required>
+                            <input type="url" placeholder="URL da imagem 1" required>
+                        </div>
+                        <div class="inputs">
+                            <input type="text" placeholder="Resposta incorreta 2" required>
+                            <input type="url" placeholder="URL da imagem 2" required>
+                        </div>
+                        <div class="inputs">
+                            <input type="text" placeholder="Resposta incorreta 3" required>
+                            <input type="url" placeholder="URL da imagem 3" required>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <button onclick="">Prosseguir pra criar níveis</button>
+
+            <button class="red-button">Prosseguir pra criar níveis</button>
         </div>
 
         <div class="hidden">
@@ -212,12 +219,15 @@
                     <img class="hidden" src="./assets/edit.png" alt="Edit icon">
                 </div>
                 <div class="question-content-container">
-                    <div class="inputs">
-                        <input type="text" placeholder="Título do nível">
-                        <input type="number" placeholder="% de acerto mínima">
-                        <input type="text" placeholder="URL da imagem do nível">
-                        <textarea class="level-description" name="level-description" rows="2" placeholder="Descrição do nível"></textarea>
-                    </div>
+                    <form>
+                        <div class="inputs">
+                            <input type="text" placeholder="Título do nível" minlength="10" required>
+                            <input type="number" placeholder="% de acerto mínima" min="0" max="0" required>
+                            <input type="url" placeholder="URL da imagem do nível" required>
+                            <textarea class="level-description" name="level-description" rows="2"
+                                placeholder="Descrição do nível" minlength="30" required></textarea>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -227,16 +237,19 @@
                     <img class="" src="./assets/edit.png" alt="Edit icon">
                 </div>
                 <div class="question-content-container hidden">
-                    <div class="inputs">
-                        <input type="text" placeholder="Título do nível">
-                        <input type="number" placeholder="% de acerto mínima">
-                        <input type="text" placeholder="URL da imagem do nível">
-                        <textarea class="level-description" name="level-description" rows="2" placeholder="Descrição do nível"></textarea>
-                    </div>
+                    <form>
+                        <div class="inputs">
+                            <input type="text" placeholder="Título do nível" minlength="10" required>
+                            <input type="number" placeholder="% de acerto mínima" min="1" max="100" required>
+                            <input type="url" placeholder="URL da imagem do nível" required>
+                            <textarea class="level-description" name="level-description" rows="2"
+                                placeholder="Descrição do nível" minlength="30" required></textarea>
+                        </div>
+                    </form>
                 </div>
             </div>
 
-            <button onclick="">Finalizar Quizz</button>
+            <button  class="red-button">Finalizar Quizz</button>
         </div>
 
         <div class="hidden">
@@ -245,8 +258,8 @@
                 <img src="./assets/quizz_cover_img.png">
                 <h2>Hey aqui</h2>
             </div>
-            <button onclick="">Acessar Quizz</button>
-            <button class="back-to-home-button" onclick="">Voltar pra home</button>
+            <button  class="red-button open-quizz">Acessar Quizz</button>
+            <button class="gray-button back-to-home">Voltar pra home</button>
         </div>
     </div>
 

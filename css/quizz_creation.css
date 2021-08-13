@@ -60,7 +60,11 @@
     font-style: italic;
 }
 
-#quizz-creation button {
+#quizz-creation .invalid {
+    background-color: rgb(255, 210, 210);
+}
+
+/* #quizz-creation button {
     font-size: 21px;
     font-weight: 400;
     color: rgba(255, 245, 244, 1);
@@ -76,7 +80,7 @@
     color: rgba(129, 129, 129, 1);
     margin: 10px auto 0;
     background-color: transparent;
-}
+} */
 
 #quizz-creation .quizz-cover {
     width: 85%;
