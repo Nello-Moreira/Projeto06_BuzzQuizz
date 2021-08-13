@@ -61,7 +61,7 @@ function renderQuestions(value){
     for (let questionN = 0; questionN < value.data.questions.length; questionN++) {
         activeQuizz.innerHTML += `
         
-        <div class="quizz-question-container">
+        <div class="quizz-question-container ${hideQuestions(questionN)}">
             <div class="quizz-question-header" style="background-color: ${value.data.questions[questionN].color}">
                 <h2>${value.data.questions[questionN].title}</h2>
             </div>
@@ -77,7 +77,6 @@ function renderQuestions(value){
         sortAnswers(value.data.questions[questionN].answers);
 
         value.data.questions[questionN].answers.forEach((answer) => {
-            console.log(answer);
             quizzAnswers.innerHTML += `
                 <li class="${specifyAnswerColor(answer.isCorrectAnswer)}">
                     <img src="${answer.image}" alt="">
@@ -87,6 +86,15 @@ function renderQuestions(value){
         });
     }
 
+}
+
+function hideQuestions(questionN){
+    if (questionN > 0) {
+        return 'hidden';
+    }
+    else {
+        return '';
+    }
 }
 
 function specifyAnswerColor(isCorrectAnswer){
