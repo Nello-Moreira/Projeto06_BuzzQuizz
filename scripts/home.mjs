@@ -1,5 +1,5 @@
 import { axiosBase } from './overall.mjs';
-import { startQuizz } from './quizz_questions.mjs';
+import { startQuizz, hideQuizzPage } from './quizz_questions.mjs';
 
 let homePageELement = document.querySelector('#home');
 let serverQuizzesElement = document.querySelector('.server-quizzes .quizzes-list');
@@ -11,6 +11,8 @@ let userQuizzesElement = document.querySelector('.user-quizzes .quizzes-list');
 function startHomeClickEvents(){
      serverQuizzesElement.addEventListener('click', getClickedQuizzID);
      userQuizzesElement.addEventListener('click', getClickedQuizzID);
+
+     homePageELement.querySelector('.create-quizz button').addEventListener('click', startCreation );
 }
 
 function getServerQuizzes(){
@@ -46,4 +48,28 @@ function hideHomePage(hide){
     
 }
 
-export { startHomeClickEvents, getServerQuizzes };
+function backToHomePage(){
+    hideCreationPage(true);
+    hideQuizzPage(true);
+    hideHomePage(false);
+    getServerQuizzes();
+}
+
+
+let creationPageELement = document.querySelector('#quizz-creation');
+
+function startCreation(){
+    hideHomePage(true);
+    hideCreationPage(false);
+}
+
+function hideCreationPage(hide){
+    if (hide === true){
+        creationPageELement.classList.add('hidden');
+    }
+    else if (hide === false){
+        creationPageELement.classList.remove('hidden');
+    }
+}
+
+export { startHomeClickEvents, getServerQuizzes, backToHomePage };

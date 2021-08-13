@@ -1,12 +1,16 @@
 import { axiosBase } from './overall.mjs';
+import { backToHomePage } from './home.mjs';
 
 let quizzPageElement = document.querySelector('#quizz');
-let activeQuizz = quizzPageElement.querySelector('.active-quizz-container');
+let activeQuizzElement = quizzPageElement.querySelector('.active-quizz-container');
+let activeQuizzObject = {};
 
 startQuizzClickEvents();
 
 function startQuizzClickEvents(){
-    activeQuizz.addEventListener('click', filterClickedElement);
+    activeQuizzElement.addEventListener('click', filterClickedElement);
+    quizzPageElement.querySelector('.back-home').addEventListener('click', backToHomePage);
+    quizzPageElement.querySelector('.quizz-restart').addEventListener('click', renderQuestions);
 }
 
 
@@ -21,6 +25,7 @@ function isAnswer(event){
 }
 
 function filterClickedElement(event){
+    console.log(event);
     if (isAnswer(event.target) && !isAnswered(event.target)) { 
             setQuestionAnswered(event.target);
     }
@@ -45,25 +50,33 @@ function startQuizz(quizzID){
 
 function getQuestions(quizzID){
     let promise = axiosBase.get('/' + quizzID);
-    promise.then(renderQuestions);
+    promise.then((value) => {
+        storeQuestions(value);
+        renderQuestions(activeQuizzObject);
+    });
 }
 
-function renderQuestions(value){
-    console.log(value.data);
+function storeQuestions(value){
+    activeQuizzObject = value.data;
+    console.log(activeQuizzObject);
+}
+
+function renderQuestions(){
+    console.log(activeQuizzObject);
     let quizzAnswers;
-    activeQuizz.innerHTML = `
+    activeQuizzElement.innerHTML = `
     
     <div class="quizz-header">
-            <img src="${value.data.image}" alt="">
-            <h1>${value.data.title}</h1>
+            <img src="${activeQuizzObject.image}" alt="">
+            <h1>${activeQuizzObject.title}</h1>
     </div>`;        
     
-    for (let questionN = 0; questionN < value.data.questions.length; questionN++) {
-        activeQuizz.innerHTML += `
+    for (let questionN = 0; questionN < activeQuizzObject.questions.length; questionN++) {
+        activeQuizzElement.innerHTML += `
         
         <div class="quizz-question-container ${hideQuestions(questionN)}">
-            <div class="quizz-question-header" style="background-color: ${value.data.questions[questionN].color}">
-                <h2>${value.data.questions[questionN].title}</h2>
+            <div class="quizz-question-header" style="background-color: ${activeQuizzObject.questions[questionN].color}">
+                <h2>${activeQuizzObject.questions[questionN].title}</h2>
             </div>
             <ul class="quizz-answers">
               
@@ -72,11 +85,11 @@ function renderQuestions(value){
 
         `;
 
-        quizzAnswers = activeQuizz.querySelector(`.quizz-question-container:nth-child(${ 2 + questionN}) .quizz-answers`);
+        quizzAnswers = activeQuizzElement.querySelector(`.quizz-question-container:nth-child(${ 2 + questionN}) .quizz-answers`);
 
-        sortAnswers(value.data.questions[questionN].answers);
+        sortAnswers(activeQuizzObject.questions[questionN].answers);
 
-        value.data.questions[questionN].answers.forEach((answer) => {
+        activeQuizzObject.questions[questionN].answers.forEach((answer) => {
             quizzAnswers.innerHTML += `
                 <li class="${specifyAnswerColor(answer.isCorrectAnswer)}">
                     <img src="${answer.image}" alt="">
@@ -117,4 +130,12 @@ function sortAnswers(array){
     });
 }
 
-export { startQuizz };
+
+
+function nextQuestion(){
+
+}
+
+
+
+export { startQuizz, hideQuizzPage };
