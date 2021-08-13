@@ -26,6 +26,7 @@ function getQuestions(quizzID){
 
 function renderQuestions(value){
     console.log(value.data);
+    let quizzAnswers;
     activeQuizz.innerHTML = `
     
     <div class="quizz-header">
@@ -36,8 +37,8 @@ function renderQuestions(value){
     for (let questionN = 0; questionN < value.data.questions.length; questionN++) {
         activeQuizz.innerHTML += `
         
-        <div class="quizz-question-container answered">
-            <div class="quizz-question-header">
+        <div class="quizz-question-container">
+            <div class="quizz-question-header" style="background-color: ${value.data.questions[questionN].color}">
                 <h2>${value.data.questions[questionN].title}</h2>
             </div>
             <ul class="quizz-answers">
@@ -46,14 +47,39 @@ function renderQuestions(value){
         </div>
 
         `;
-        
+
+        quizzAnswers = activeQuizz.querySelector(`.quizz-question-container:nth-child(${ 2 + questionN}) .quizz-answers`);
+
+        sortAnswers(value.data.questions[questionN].answers);
+
+        value.data.questions[questionN].answers.forEach((answer) => {
+            console.log(answer);
+            quizzAnswers.innerHTML += `
+                <li class="">
+                    <img src="${answer.image}" alt="">
+                    <h3>${answer.text}</h3>
+                </li>
+            `
+        });
     }
+
+
+    
 
 function addCorrectAnswerClass(isCorrectAnswer){
 
 }
     
+function sortAnswers(array){
+    array.sort(compareFunction);
+}
 
+
+
+
+function compareFunction() { 
+	return Math.random() - 0.5; 
+}
 
 
 }
