@@ -6,7 +6,7 @@ const axiosBase = axios.create({
     baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v3/buzzquizz/quizzes',
 });
 
-//const creationPageElement = document.querySelector('#quizz-creation');
+//let creationPageElement = document.querySelector('#quizz-creation');
 
 getServerQuizzes();
 startHomeClickEvents();

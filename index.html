@@ -23,7 +23,7 @@
 <body>
     <header>BuzzQuizz</header>
 
-    <div id="home" class="hidden">
+    <div id="home" class="">
         <div class="create-quizz">
             <span>Você não criou nenhum quizz ainda :(</span>
             <button>Criar Quizz</button>
@@ -51,12 +51,14 @@
         </div>
     </div>
 
-    <div id="quizz" class="">
-        <div class="quizz-header">
+    <div id="quizz" class="hidden">
+        <div class="active-quizz-container">
+            <div class="quizz-header">
             <img src="./assets/potter_castle.jpg" alt="">
             <h1>O quão Potterhead é você?</h1>
-        </div>
-        <div class="quizz-question-container answered">
+            </div>
+
+            <div class="quizz-question-container answered">
             <div class="quizz-question-header">
                 <h2>Texto muito grande Texto muito grande Texto muito grande Texto muito grande </h2>
             </div>
@@ -79,20 +81,20 @@
                 </li>
 
             </ul>
-        </div>
-
-        <div class="quizz-result">
-            <div class="quizz-result-header">
-                <h2>Texto muito grande Texto muito grande Texto muito grande Texto muito grande </h2>
             </div>
-            <div class="quizz-result-content">
-                <img src="./assets/widescreen-test.png" alt="">
 
-                <p>Parabéns Potterhead! Bem-vindx a Hogwarts, aproveite o loop infinito de comida e clique no botão abaixo para usar o vira-tempo e reiniciar este teste.</p>
+            <div class="quizz-result">
+                <div class="quizz-result-header">
+                    <h2>Texto muito grande Texto muito grande Texto muito grande Texto muito grande </h2>
+                </div>
+                <div class="quizz-result-content">
+                    <img src="./assets/widescreen-test.png" alt="">
+
+                    <p>Parabéns Potterhead! Bem-vindx a Hogwarts, aproveite o loop infinito de comida e clique no botão abaixo para usar o vira-tempo e reiniciar este teste.</p>
+                </div>
+                </ul>
             </div>
-            </ul>
         </div>
-
         <button class="quizz-restart">Reiniciar Quizz</button>
         <button class="back-home">Voltar pra home</button>
     </div>

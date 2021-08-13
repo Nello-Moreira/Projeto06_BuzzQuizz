@@ -1,5 +1,13 @@
 #quizz{
+    width: 100vw;
     margin: var(--header-height) auto 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#quizz .active-quizz-container{
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
