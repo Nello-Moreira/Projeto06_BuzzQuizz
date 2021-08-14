@@ -9,10 +9,20 @@ let correctAnswersN;
 let totalNQuestions;
 let quizzScore;
 
+function resetScore(){
+    correctAnswersN = 0;
+}
+
+function restartQuizz(){
+    resetScore();
+    scrollToHeader();
+    renderQuestions();
+}
+
 function startQuizzClickEvents(){
     activeQuizzElement.addEventListener('click', filterClickedElement);
     quizzPageElement.querySelector('.back-home').addEventListener('click', backToHomePage);
-    quizzPageElement.querySelector('.quizz-restart').addEventListener('click', renderQuestions);
+    quizzPageElement.querySelector('.quizz-restart').addEventListener('click', restartQuizz);
 }
 
 
@@ -49,7 +59,7 @@ function startQuizz(quizzID){
     hideQuizzPage(false);
     getQuestions(quizzID);
     scrollToHeader();
-    correctAnswersN = 0;
+    resetScore();
 }
 
 function getTotalNQuestions(){
@@ -70,7 +80,6 @@ function storeQuestions(value){
 }
 
 function renderQuestions(){
-    scrollToHeader();
     let quizzAnswers;
     activeQuizzElement.innerHTML = `
     
@@ -109,19 +118,30 @@ function renderQuestions(){
 }
 
 function renderResult(levelIndex){
-    activeQuizzElement += `
+    activeQuizzElement.innerHTML += `
         <div class="quizz-result">
             <div class="quizz-result-header">
                 <h2>${activeQuizzObject.levels[levelIndex].title}</h2>
             </div>
 
             <div class="quizz-result-content">
-                <img src="./assets/widescreen-test.png" alt="">
-                <p>Parabéns Potterhead! Bem-vindx a Hogwarts, aproveite o loop infinito de comida e clique no botão
-                    abaixo para usar o vira-tempo e reiniciar este teste.</p>
+                <img src="${activeQuizzObject.levels[levelIndex].image}" alt="">
+                <p>${activeQuizzObject.levels[levelIndex].text}.</p>
             </div>
         </div>
-    `
+    `;
+}
+
+function getLevelIndex () {
+    let levelIndex;
+    
+    for (let i = 0; i < activeQuizzObject.levels.length; i++) {
+        if (quizzScore >= activeQuizzObject.levels[i].minValue) {
+            levelIndex = i;
+        }
+        
+    }
+    return(levelIndex);
 }
 
 function isAnswerCorrect(selectedAnswer){
@@ -132,7 +152,6 @@ function isAnswerCorrect(selectedAnswer){
 
 function calcResult(){
     quizzScore = (correctAnswersN / totalNQuestions) * 100;
-    console.log(quizzScore);
 }
 
 function hideQuestions(questionN){
@@ -165,15 +184,15 @@ function findNextQuestion(currentQuestion){
     let nextQuestion = currentQuestion.nextElementSibling;
 
     if (nextQuestion == null) {
-        //let quizzResult = activeQuizzElement.querySelector('.quizz-result');
-        //console.log(quizzResult);
-        //setTimeout(unhideNextQuestion, 2000, quizzResult);
-        //setTimeout(scrollNextQuestion, 2000, quizzResult);
         calcResult();
+        renderResult(getLevelIndex());
+        let quizzResult = activeQuizzElement.querySelector('.quizz-result');
+        setTimeout(unhideNextQuestion, 2000, quizzResult);
+        setTimeout(scrollNextQuestion, 2000, quizzResult);
     }
     else {
-        setTimeout(unhideNextQuestion, 1, nextQuestion);
-        setTimeout(scrollNextQuestion, 1, nextQuestion);
+        setTimeout(unhideNextQuestion, 2000, nextQuestion);
+        setTimeout(scrollNextQuestion, 2000, nextQuestion);
     }
 }
 
@@ -198,9 +217,6 @@ function sortAnswers(array){
 
 
 
-function nextQuestion(){
-
-}
 
 
 
