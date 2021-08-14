@@ -4,9 +4,6 @@ import { backToHomePage } from './home.mjs';
 let quizzPageElement = document.querySelector('#quizz');
 let activeQuizzElement = quizzPageElement.querySelector('.active-quizz-container');
 let activeQuizzObject = {};
-//////////// testar se isso não buga ao chamar em overall
-startQuizzClickEvents();
-///////////////////
 
 function startQuizzClickEvents(){
     activeQuizzElement.addEventListener('click', filterClickedElement);
@@ -26,7 +23,7 @@ function isAnswer(event){
 }
 
 function filterClickedElement(event){
-    console.log(event);
+
     if (isAnswer(event.target) && !isAnswered(event.target)) { 
             setQuestionAnswered(event.target);
     }
@@ -60,11 +57,10 @@ function getQuestions(quizzID){
 
 function storeQuestions(value){
     activeQuizzObject = value.data;
-    console.log(activeQuizzObject);
 }
 
 function renderQuestions(){
-    console.log(activeQuizzObject);
+    scrollToHeader();
     let quizzAnswers;
     activeQuizzElement.innerHTML = `
     
@@ -121,9 +117,33 @@ function specifyAnswerColor(isCorrectAnswer){
     }
 }
 
+function scrollNextQuestion(nextQuestion){
+    nextQuestion.scrollIntoView();
+}
+
+function unhideNextQuestion(nextQuestion){
+    nextQuestion.classList.remove('hidden');
+}
+
+function findNextQuestion(currentQuestion){
+    let nextQuestion = currentQuestion.nextElementSibling;
+
+    if (nextQuestion == null) {
+        return;
+    }
+    else {
+        setTimeout(unhideNextQuestion, 2000, nextQuestion);
+        setTimeout(scrollNextQuestion, 2000, nextQuestion);
+    }
+}
+
 function setQuestionAnswered(selectedAnswer){
     selectedAnswer.parentNode.classList.add('selected');
-    selectedAnswer.parentNode.parentNode.parentNode.classList.add('answered');
+
+    let currentQuestion = selectedAnswer.parentNode.parentNode.parentNode;
+    currentQuestion.classList.add('answered');
+
+    findNextQuestion(currentQuestion);
 }
     
 function sortAnswers(array){
@@ -140,4 +160,4 @@ function nextQuestion(){
 
 
 
-export { startQuizz, hideQuizzPage };
+export { startQuizz, hideQuizzPage, startQuizzClickEvents };

@@ -1,5 +1,5 @@
 import { startHomeClickEvents, getServerQuizzes } from './home.mjs';
-import {  } from './quizz_questions.mjs';
+import { startQuizzClickEvents } from './quizz_questions.mjs';
 import { activeFormEvent, activeNextButtonsEvent, activeQuestionEvent, visitQuizzCreated, backToHome } from './quizz_creation.mjs';
 
 export { axiosBase };
@@ -14,6 +14,7 @@ function scrollToHeader(){
 
 getServerQuizzes();
 startHomeClickEvents();
+startQuizzClickEvents();
 activeFormEvent();
 activeNextButtonsEvent();
 activeQuestionEvent();
