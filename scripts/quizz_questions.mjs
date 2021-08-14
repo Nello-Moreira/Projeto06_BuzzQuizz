@@ -1,5 +1,5 @@
-import { axiosBase, scrollToHeader } from './overall.mjs';
-import { backToHomePage } from './home.mjs';
+import { axiosBase, scrollToHeader, hideLoader } from './overall.mjs';
+import { backToHomePage, hideHomePage } from './home.mjs';
 
 let quizzPageElement = document.querySelector('#quizz');
 let activeQuizzElement = quizzPageElement.querySelector('.active-quizz-container');
@@ -56,7 +56,8 @@ function hideQuizzPage(hide){
 }
 
 function startQuizz(quizzID){
-    hideQuizzPage(false);
+    hideHomePage(true);
+    hideLoader(false);
     getQuestions(quizzID);
     scrollToHeader();
     resetScore();
@@ -71,6 +72,8 @@ function getQuestions(quizzID){
     promise.then((value) => {
         storeQuestions(value);
         getTotalNQuestions();
+        hideLoader(true);
+        hideQuizzPage(false);
         renderQuestions(activeQuizzObject);
     });
 }

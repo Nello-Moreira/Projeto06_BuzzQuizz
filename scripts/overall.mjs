@@ -13,6 +13,15 @@ function scrollToHeader(){
     window.scrollTo(0,0);
 }
 
+function hideLoader(hide){
+    if (hide === true) {
+        document.querySelector('#loader').classList.add('hidden');
+    }
+    else {
+        document.querySelector('#loader').classList.remove('hidden');
+    }
+}
+
 getServerQuizzes();
 startHomeClickEvents();
 startQuizzClickEvents();
@@ -22,4 +31,4 @@ activeQuestionEvent();
 activeTriggerEvents();
 
 
-export {scrollToHeader};
+export {scrollToHeader, hideLoader};

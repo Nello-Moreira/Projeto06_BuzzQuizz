@@ -46,7 +46,6 @@ function renderLoaders(){
 function getClickedQuizzID(event){
     let clickedQuizzID;
     clickedQuizzID = Number(event.target.getAttribute('name').substring(9));
-    hideHomePage(true);
     startQuizz(clickedQuizzID);
 }
 
@@ -88,4 +87,4 @@ function hideCreationPage(hide){
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////
-export { startHomeClickEvents, getServerQuizzes, backToHomePage };
+export { startHomeClickEvents, getServerQuizzes, backToHomePage, hideHomePage };
