@@ -5,6 +5,10 @@ let quizzPageElement = document.querySelector('#quizz');
 let activeQuizzElement = quizzPageElement.querySelector('.active-quizz-container');
 let activeQuizzObject = {};
 
+let correctAnswersN;
+let totalNQuestions;
+let quizzScore;
+
 function startQuizzClickEvents(){
     activeQuizzElement.addEventListener('click', filterClickedElement);
     quizzPageElement.querySelector('.back-home').addEventListener('click', backToHomePage);
@@ -45,12 +49,18 @@ function startQuizz(quizzID){
     hideQuizzPage(false);
     getQuestions(quizzID);
     scrollToHeader();
+    correctAnswersN = 0;
+}
+
+function getTotalNQuestions(){
+    totalNQuestions = activeQuizzObject.questions.length;
 }
 
 function getQuestions(quizzID){
     let promise = axiosBase.get('/' + quizzID);
     promise.then((value) => {
         storeQuestions(value);
+        getTotalNQuestions();
         renderQuestions(activeQuizzObject);
     });
 }
@@ -80,7 +90,6 @@ function renderQuestions(){
               
             </ul>
         </div>
-
         `;
 
         quizzAnswers = activeQuizzElement.querySelector(`.quizz-question-container:nth-child(${ 2 + questionN}) .quizz-answers`);
@@ -97,6 +106,33 @@ function renderQuestions(){
         });
     }
 
+}
+
+function renderResult(levelIndex){
+    activeQuizzElement += `
+        <div class="quizz-result">
+            <div class="quizz-result-header">
+                <h2>${activeQuizzObject.levels[levelIndex].title}</h2>
+            </div>
+
+            <div class="quizz-result-content">
+                <img src="./assets/widescreen-test.png" alt="">
+                <p>Parabéns Potterhead! Bem-vindx a Hogwarts, aproveite o loop infinito de comida e clique no botão
+                    abaixo para usar o vira-tempo e reiniciar este teste.</p>
+            </div>
+        </div>
+    `
+}
+
+function isAnswerCorrect(selectedAnswer){
+    if (selectedAnswer.classList.contains('right-green')) {
+        correctAnswersN++;
+    }
+}
+
+function calcResult(){
+    quizzScore = (correctAnswersN / totalNQuestions) * 100;
+    console.log(quizzScore);
 }
 
 function hideQuestions(questionN){
@@ -129,19 +165,27 @@ function findNextQuestion(currentQuestion){
     let nextQuestion = currentQuestion.nextElementSibling;
 
     if (nextQuestion == null) {
-        return;
+        //let quizzResult = activeQuizzElement.querySelector('.quizz-result');
+        //console.log(quizzResult);
+        //setTimeout(unhideNextQuestion, 2000, quizzResult);
+        //setTimeout(scrollNextQuestion, 2000, quizzResult);
+        calcResult();
     }
     else {
-        setTimeout(unhideNextQuestion, 2000, nextQuestion);
-        setTimeout(scrollNextQuestion, 2000, nextQuestion);
+        setTimeout(unhideNextQuestion, 1, nextQuestion);
+        setTimeout(scrollNextQuestion, 1, nextQuestion);
     }
 }
 
 function setQuestionAnswered(selectedAnswer){
+    isAnswerCorrect(selectedAnswer.parentNode);
+    
     selectedAnswer.parentNode.classList.add('selected');
 
     let currentQuestion = selectedAnswer.parentNode.parentNode.parentNode;
     currentQuestion.classList.add('answered');
+
+    
 
     findNextQuestion(currentQuestion);
 }
