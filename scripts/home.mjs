@@ -12,6 +12,7 @@ function startHomeClickEvents(){
      userQuizzesElement.addEventListener('click', getClickedQuizzID);
 
      homePageELement.querySelector('.create-quizz button').addEventListener('click', startCreation );
+     homePageELement.querySelector('.add-quizz-button').addEventListener('click', startCreation );
 }
 
 function getServerQuizzes(){
