@@ -23,7 +23,7 @@ function renderServerQuizzes(quizzes){
     serverQuizzesElement.innerHTML = '';
     for (let i = 0; i < quizzes.data.length; i++) {
         serverQuizzesElement.innerHTML += `
-            <li name='quizz-ID-${quizzes.data[i].id}'>
+            <li class='quizz-card' name='quizz-ID-${quizzes.data[i].id}'>
                 <img src="${quizzes.data[i].image}" alt="">
                 <h4 name='quizz-ID-${quizzes.data[i].id}'>${quizzes.data[i].title}</h4>
             </li>

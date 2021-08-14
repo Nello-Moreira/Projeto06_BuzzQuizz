@@ -64,13 +64,13 @@
     gap: 15px;
 }
 
-#home .quizzes-list li {
+#home .quizzes-list li.quizz-card {
     width: 340px;
     height: 181px;
     position: relative;
 }
 
-#home .quizzes-list li::before {
+#home .quizzes-list li.quizz-card::before {
     content: '';
     width: 100%;
     height: 100%;

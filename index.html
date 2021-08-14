@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="./css/home.css">
     <link rel="stylesheet" href="./css/quizz_questions.css">
     <link rel="stylesheet" href="./css/quizz_creation.css">
+    <link rel="stylesheet" href="./css/loader.css">
 </head>
 
 <body>
@@ -35,7 +36,7 @@
                 <ion-icon class="add-quizz" name="add-circle"></ion-icon>
             </div>
             <ul class="quizzes-list">
-                <li>
+                <li class='quizz-card'>
                     <img src="./assets/potter_castle.jpg" alt="">
                     <h4>O quão Potterhead é você?</h4>
                 </li>
@@ -44,11 +45,13 @@
 
         <div class="server-quizzes">
             <h3>Todos os Quizzes</h3>
+            
             <ul class="quizzes-list">
-                <li>
+                <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                <!-- <li>
                     <img src="./assets/simpsons.jpg" alt="">
                     <h4>Acerte os personagens corretos dos Simpsons e prove seu amor!</h4>
-                </li>
+                </li> -->
             </ul>
         </div>
     </div>
