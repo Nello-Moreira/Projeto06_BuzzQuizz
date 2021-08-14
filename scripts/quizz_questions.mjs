@@ -130,6 +130,10 @@ function renderResult(levelIndex){
             </div>
         </div>
     `;
+
+        let quizzResult = activeQuizzElement.querySelector('.quizz-result');
+        unhideNextQuestion(quizzResult);
+        scrollNextQuestion(quizzResult);
 }
 
 function getLevelIndex () {
@@ -185,10 +189,8 @@ function findNextQuestion(currentQuestion){
 
     if (nextQuestion == null) {
         calcResult();
-        renderResult(getLevelIndex());
-        let quizzResult = activeQuizzElement.querySelector('.quizz-result');
-        setTimeout(unhideNextQuestion, 2000, quizzResult);
-        setTimeout(scrollNextQuestion, 2000, quizzResult);
+        //renderResult(getLevelIndex());
+        setTimeout(renderResult,2000,getLevelIndex());
     }
     else {
         setTimeout(unhideNextQuestion, 2000, nextQuestion);
