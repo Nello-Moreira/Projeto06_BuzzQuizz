@@ -1,5 +1,9 @@
 export { activeTriggerEvents, removeTriggerEvents, visitQuizzCreated, backToHome };
 
+const axiosBase = axios.create({
+    baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v3/buzzquizz/quizzes',
+});
+
 const creationPage = {
     section: {
         settings: 0,
@@ -9,12 +13,75 @@ const creationPage = {
     }
 };
 
+const newQuizz = {
+    title: "",
+    image: "",
+    questions: [],
+    levels: []
+};
+
 let visitQuizzCreated = false;
 let backToHome = false;
 
 function getSectionElement(section) {
     const page = document.getElementById("quizz-creation");
     return page.children[section];
+}
+
+function createQuizzObject() {
+    const settingsSection = getSectionElement(creationPage.section.settings);
+    const questionsSection = getSectionElement(creationPage.section.questions);
+    const levelsSection = getSectionElement(creationPage.section.levels);
+    const settingsForm = settingsSection.querySelector("form");
+
+    const questions = [];
+    const levels = [];
+    const questionForms = questionsSection.querySelectorAll("form");
+    const levelForms = levelsSection.querySelectorAll("form");
+    let answers;
+    let questionInputs;
+    let levelInputs;
+
+    for (let i = 0; i < questionForms.length; i++) {
+        questionInputs = questionForms[i].querySelectorAll("input");
+
+        answers = [];
+        for (let j = 2; j < questionInputs.length; j += 2) {
+            if (questionInputs[j].value === "") {
+                break;
+            }
+
+            answers.push({
+                text: questionInputs[j].value,
+                image: questionInputs[j + 1].value,
+                isCorrectAnswer: j === 2
+            });
+        }
+
+        questions.push({
+            title: questionInputs[0].value,
+            color: questionInputs[1].value,
+            answers
+        })
+    }
+
+    for (let i = 0; i < levelForms.length; i++) {
+        levelInputs = levelForms[i].querySelectorAll("input");
+        
+        levels.push({
+            title: levelInputs[0].value,
+            image: levelInputs[2].value,
+            text: levelForms[i].querySelector("textarea").value,
+            minValue: levelInputs[1].value
+        })
+    }
+
+    console.log({
+        title: settingsForm.querySelector("input[type=text]").value,
+        image: settingsForm.querySelector("input[type=url]").value,
+        questions,
+        levels
+    });
 }
 
 function validation(event) {
@@ -118,7 +185,7 @@ function createQuestionContainer(questionClasses) {
 
     questionColorInput.type = "text";
     questionColorInput.placeholder = "Cor de fundo da pergunta (hexadecimal, ex: #fafafa)";
-    questionColorInput.pattern = "#[A-f]{6}";
+    questionColorInput.pattern = "#([A-f]|[0-9]){6}";
     questionColorInput.required = true;
 
     for (let singleClass of questionClasses) {
@@ -223,7 +290,7 @@ function createLevelContentContainer(levelNumber) {
 
     levelTitleInput.type = "text";
     levelTitleInput.placeholder = "Título do nível";
-    levelTitleInput.minlength = 10;
+    levelTitleInput.minlength = "10";
     levelTitleInput.required = true;
 
     levelPercentageInput.type = "number";
@@ -242,7 +309,7 @@ function createLevelContentContainer(levelNumber) {
     levelimgInput.required = true;
 
     levelDescriptionInput.rows = 2;
-    levelDescriptionInput.minLength = 30;
+    levelDescriptionInput.minLength = "30";
     levelDescriptionInput.placeholder = "Descrição do nível";
     levelDescriptionInput.required = true;
     levelDescriptionInput.classList.add("level-description");
@@ -282,11 +349,11 @@ function openNextSection(event) {
     const button = event.target;
     const sectionElement = button.parentElement;
     const allSections = sectionElement.parentElement.children;
-    
+
     if (checkIfAllValid(sectionElement)) {
         sectionElement.classList.add("hidden");
         sectionElement.nextElementSibling.classList.remove("hidden");
-        
+
         if (sectionElement === allSections[creationPage.section.settings]) {
             createQuestions(allSections[creationPage.section.questions]);
             activeHideEvent(allSections[creationPage.section.questions]);
@@ -302,6 +369,14 @@ function openNextSection(event) {
         if (sectionElement === allSections[creationPage.section.levels]) {
             formEvent(allSections[creationPage.section.questions], false);
             refreshQuizzCoverPage(allSections[creationPage.section.endSection]);
+            createQuizzObject();
+
+
+
+
+
+
+
         }
     }
 }
@@ -310,7 +385,7 @@ function changeVisibility(question) {
     const titleContainer = question.querySelector(".title-container")
     const editionIcon = titleContainer.querySelector("img");
     const form = question.querySelector("form");
-    
+
     editionIcon.classList.toggle("hidden");
     form.classList.toggle("hidden");
     question.classList.remove("invalid");
@@ -339,7 +414,7 @@ function clickToHideQuestion(event) {
 
 function activeHideEvent(sectionElement) {
     let sectionChilds;
-    
+
     if (sectionElement === getSectionElement(creationPage.section.questions)) {
         sectionChilds = sectionElement.querySelectorAll(".question");
     } else if (sectionElement === getSectionElement(creationPage.section.levels)) {
@@ -357,7 +432,7 @@ function activeTriggerEvents() {
         sectionElement = getSectionElement(creationPage.section[sectionIndex]);
         button = sectionElement.querySelector("button");
 
-        if (button.classList.length === 1) {
+        if (button.classList.length === 1 || button.classList.contains("end-quizz")) {
             button.addEventListener("click", openNextSection);
         }
         if (button.classList.contains("open-quizz")) {
@@ -373,7 +448,7 @@ function activeTriggerEvents() {
     }
 }
 
-function removeTriggerEvents(){
+function removeTriggerEvents() {
     let sectionElement = "";
     let button = "";
 
