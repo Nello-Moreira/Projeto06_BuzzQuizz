@@ -81,3 +81,22 @@
     }
   }
   
+#loader {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#loader > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#loader > div span{
+  font-size: 25px;
+  font-weight: 400;
+  color: rgba(236, 54, 45, 1);
+  margin-top: 20px;
+}
