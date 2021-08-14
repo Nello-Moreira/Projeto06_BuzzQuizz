@@ -31,6 +31,18 @@ function renderServerQuizzes(quizzes){
     }
 }
 
+function renderLoaders(){
+    serverQuizzesElement.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+        serverQuizzesElement.innerHTML += `
+            <li class="quizzes-list-loader">
+                <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            </li>
+        `
+        
+    }
+}
+
 function getClickedQuizzID(event){
     let clickedQuizzID;
     clickedQuizzID = Number(event.target.getAttribute('name').substring(9));
@@ -53,6 +65,7 @@ function backToHomePage(){
     hideQuizzPage(true);
     hideHomePage(false);
     scrollToHeader();
+    renderLoaders();
     getServerQuizzes();
 }
 

@@ -64,10 +64,23 @@
     gap: 15px;
 }
 
-#home .quizzes-list li.quizz-card {
+#home .quizzes-list li {
     width: 340px;
     height: 181px;
     position: relative;
+}
+
+#home .quizzes-list li.quizzes-list-loader{
+    border: 1px solid rgb(236, 54, 45);;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#home .quizzes-list li .lds-default{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 #home .quizzes-list li.quizz-card::before {
