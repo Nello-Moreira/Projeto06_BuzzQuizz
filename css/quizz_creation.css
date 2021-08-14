@@ -14,7 +14,7 @@
     margin-bottom: 29px;
 }
 
-.question {
+.question, .level {
     box-sizing: border-box;
     padding: 27px 17px;
     background-color: rgba(255, 255, 255, 1);
@@ -23,13 +23,13 @@
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
 }
 
-.question-title-container {
+.title-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.question-title-container img {
+.title-container img {
     width: 26px;
     height: 23px;
 }

@@ -1,4 +1,4 @@
-export { activeFormEvent, activeNextButtonsEvent, activeQuestionEvent, visitQuizzCreated, backToHome };
+export { activeTriggerEvents, removeTriggerEvents, visitQuizzCreated, backToHome };
 
 const creationPage = {
     section: {
@@ -34,40 +34,18 @@ function validation(event) {
     input.classList.remove("invalid");
 }
 
-function activeFormEvent() {
-    let sectionElement = "";
-    let forms = "";
-    let formElement = "";
-
-    for (let sectionIndex in creationPage.section) {
-        sectionElement = getSectionElement(creationPage.section[sectionIndex]);
-        forms = sectionElement.querySelectorAll("form");
-        for (let formIndex = 0; formIndex < forms.length; formIndex++) {
-            formElement = forms[formIndex];
-            formElement.addEventListener("change", validation);
-        }
+function formEvent(sectionElement, active) {
+    const forms = sectionElement.querySelectorAll("form");
+    if (active) {
+        forms.forEach(element => element.addEventListener("change", validation));
+        return;
     }
-}
-
-function removeFormEvent() {
-    let sectionElement = "";
-    let forms = "";
-    let formElement = "";
-
-    for (let sectionIndex in creationPage.section) {
-        sectionElement = getSectionElement(creationPage.section[sectionIndex]);
-        forms = sectionElement.querySelectorAll("form");
-        for (let formIndex = 0; formIndex < forms.length; formIndex++) {
-            formElement = forms[formIndex];
-            formElement.removeEventListener("change", validation);
-        }
-    }
+    forms.forEach(element => element.removeEventListener("change", validation));
 }
 
 function checkIfAllValid(section) {
     const forms = section.querySelectorAll("form");
     let formElement;
-    let questionContentContainer;
     let questionElement;
 
     for (let formIndex = 0; formIndex < forms.length; formIndex++) {
@@ -104,17 +82,23 @@ function goBackToHome(event) {
     backToHome = true;
 }
 
-function createQuestionTitleContainer(questionNumber) {
+function createTitleContainer(questionNumber, answerOrLevel) {
     const titleContainer = document.createElement("div");
     const title = document.createElement("h3");
     const editionIcon = document.createElement("img");
 
-    title.innerHTML = "Pergunta " + questionNumber;
+    if (answerOrLevel.toLowerCase() === "answer") {
+        title.innerHTML = "Pergunta " + questionNumber;
+    } else if (answerOrLevel.toLowerCase() === "level") {
+        title.innerHTML = "Nivel " + questionNumber;
+    } else {
+        throw "No such possibility for 'answerOrLevel'";
+    }
 
     editionIcon.classList.add("hidden");
     editionIcon.src = "./assets/edit.png";
 
-    titleContainer.classList.add("question-title-container");
+    titleContainer.classList.add("title-container");
 
     titleContainer.appendChild(title);
     titleContainer.appendChild(editionIcon);
@@ -167,6 +151,10 @@ function createAnswers(numberOfAnswers, answerClasses) {
         } else {
             answerTextInput.placeholder = "Resposta incorreta " + (i + 1);
             answerImgInput.placeholder = "URL da imagem " + (i + 1);
+            if (i > 0) {
+                answerTextInput.placeholder += " (opcional)";
+                answerImgInput.placeholder += " (opcional)";
+            }
         }
         if (i === 0) {
             answerTextInput.required = true;
@@ -206,7 +194,7 @@ function createQuestionContentContainer() {
     return contentContainer;
 }
 
-function createquestions(sectionElement) {
+function createQuestions(sectionElement) {
     const endOfSectioButton = sectionElement.querySelector("button");
     const settingsSection = (sectionElement.parentElement.children)[creationPage.section.settings];
     const numberOfQuestions = settingsSection.querySelector("input[type='number']").value;
@@ -216,41 +204,152 @@ function createquestions(sectionElement) {
         questionContainer = document.createElement("div");
         questionContainer.classList.add("question");
 
-        questionContainer.appendChild(createQuestionTitleContainer(i + 1));
+        questionContainer.appendChild(createTitleContainer(i + 1, "answer"));
         questionContainer.appendChild(createQuestionContentContainer());
         sectionElement.insertBefore(questionContainer, endOfSectioButton);
 
         if (i !== 0) {
-            changeQuestionVisibility(questionContainer);
+            changeVisibility(questionContainer);
         }
     }
 }
 
-function createlevels(sectionElement) { }
+function createLevelContentContainer(levelNumber) {
+    const contentContainer = document.createElement("form");
+    const levelTitleInput = document.createElement("input");
+    const levelPercentageInput = document.createElement("input");
+    const levelimgInput = document.createElement("input");
+    const levelDescriptionInput = document.createElement("textarea");
+
+    levelTitleInput.type = "text";
+    levelTitleInput.placeholder = "Título do nível";
+    levelTitleInput.minlength = 10;
+    levelTitleInput.required = true;
+
+    levelPercentageInput.type = "number";
+    levelPercentageInput.placeholder = "% de acerto mínima";
+    levelPercentageInput.required = true;
+    if (levelNumber === 1) {
+        levelPercentageInput.min = 0;
+        levelPercentageInput.max = 0;
+    } else {
+        levelPercentageInput.min = 1;
+        levelPercentageInput.max = 100;
+    }
+
+    levelimgInput.type = "url";
+    levelimgInput.placeholder = "URL da imagem do nível"
+    levelimgInput.required = true;
+
+    levelDescriptionInput.rows = 2;
+    levelDescriptionInput.minLength = 30;
+    levelDescriptionInput.placeholder = "Descrição do nível";
+    levelDescriptionInput.required = true;
+    levelDescriptionInput.classList.add("level-description");
+
+    contentContainer.classList.add("question-content-container");
+    contentContainer.classList.add("inputs");
+
+    contentContainer.appendChild(levelTitleInput);
+    contentContainer.appendChild(levelPercentageInput);
+    contentContainer.appendChild(levelimgInput);
+    contentContainer.appendChild(levelDescriptionInput);
+
+    return contentContainer;
+}
+
+function createlevels(sectionElement) {
+    const endOfSectioButton = sectionElement.querySelector("button");
+    const settingsSection = (sectionElement.parentElement.children)[creationPage.section.settings];
+    const numberOfLevels = (settingsSection.querySelectorAll("input[type='number']"))[1].value;
+    let levelContainer;
+
+    for (let i = 0; i < numberOfLevels; i++) {
+        levelContainer = document.createElement("div");
+        levelContainer.classList.add("level");
+
+        levelContainer.appendChild(createTitleContainer(i + 1, "level"));
+        levelContainer.appendChild(createLevelContentContainer(i + 1));
+        sectionElement.insertBefore(levelContainer, endOfSectioButton);
+
+        if (i !== 0) {
+            changeVisibility(levelContainer);
+        }
+    }
+}
 
 function openNextSection(event) {
     const button = event.target;
     const sectionElement = button.parentElement;
     const allSections = sectionElement.parentElement.children;
-
+    
     if (checkIfAllValid(sectionElement)) {
         sectionElement.classList.add("hidden");
         sectionElement.nextElementSibling.classList.remove("hidden");
-
+        
         if (sectionElement === allSections[creationPage.section.settings]) {
-            createquestions(allSections[creationPage.section.questions]);
-            activeQuestionEvent(allSections[creationPage.section.questions]);
+            createQuestions(allSections[creationPage.section.questions]);
+            activeHideEvent(allSections[creationPage.section.questions]);
+            formEvent(allSections[creationPage.section.questions], true);
         }
         if (sectionElement === allSections[creationPage.section.questions]) {
+            formEvent(allSections[creationPage.section.settings], false);
+
             createlevels(allSections[creationPage.section.levels]);
+            activeHideEvent(allSections[creationPage.section.levels]);
+            formEvent(allSections[creationPage.section.levels], true);
         }
         if (sectionElement === allSections[creationPage.section.levels]) {
+            formEvent(allSections[creationPage.section.questions], false);
             refreshQuizzCoverPage(allSections[creationPage.section.endSection]);
         }
     }
 }
 
-function activeNextButtonsEvent() {
+function changeVisibility(question) {
+    const titleContainer = question.querySelector(".title-container")
+    const editionIcon = titleContainer.querySelector("img");
+    const form = question.querySelector("form");
+    
+    editionIcon.classList.toggle("hidden");
+    form.classList.toggle("hidden");
+    question.classList.remove("invalid");
+}
+
+function getSectionChildFromClick(event) {
+    if (event.target.classList.contains("question") || event.target.classList.contains("level")) {
+        return event.target;
+    }
+    if (event.target.classList.contains("title-container")) {
+        return event.target.parentElement;
+    }
+    if (event.target.parentElement.classList.contains("title-container")) {
+        return event.target.parentElement.parentElement;
+    }
+    return false;
+}
+
+function clickToHideQuestion(event) {
+    const sectionChild = getSectionChildFromClick(event); // this can be a question or a level
+
+    if (sectionChild) {
+        changeVisibility(sectionChild);
+    }
+}
+
+function activeHideEvent(sectionElement) {
+    let sectionChilds;
+    
+    if (sectionElement === getSectionElement(creationPage.section.questions)) {
+        sectionChilds = sectionElement.querySelectorAll(".question");
+    } else if (sectionElement === getSectionElement(creationPage.section.levels)) {
+        sectionChilds = sectionElement.querySelectorAll(".level");
+    }
+
+    sectionChilds.forEach(element => element.addEventListener("click", clickToHideQuestion));
+}
+
+function activeTriggerEvents() {
     let sectionElement = "";
     let button = "";
 
@@ -267,10 +366,14 @@ function activeNextButtonsEvent() {
         if (button.classList.contains("back-to-home")) {
             button.addEventListener("click", goBackToHome);
         }
+
+        if (creationPage.section[sectionIndex] === creationPage.section.settings) {
+            formEvent(sectionElement, true);
+        }
     }
 }
 
-function removeNextButtonsEvent() {
+function removeTriggerEvents(){
     let sectionElement = "";
     let button = "";
 
@@ -278,47 +381,18 @@ function removeNextButtonsEvent() {
         sectionElement = getSectionElement(creationPage.section[sectionIndex]);
         button = sectionElement.querySelector("button");
 
-        if (button.classList.length === 0) {
+        if (button.classList.length === 1) {
             button.removeEventListener("click", openNextSection);
         }
-    }
-}
+        if (button.classList.contains("open-quizz")) {
+            button.removeEventListener("click", visitQuizz);
+        }
+        if (button.classList.contains("back-to-home")) {
+            button.removeEventListener("click", goBackToHome);
+        }
 
-function changeQuestionVisibility(question) {
-    const questionTitle = question.querySelector(".question-title-container")
-    const editionIcon = questionTitle.querySelector("img");
-    const questionForm = question.querySelector("form");
-
-    editionIcon.classList.toggle("hidden");
-    questionForm.classList.toggle("hidden");
-    question.classList.remove("invalid");
-}
-
-function getQuestionFromClick(event) {
-    if (event.target.classList.contains("question")) {
-        return event.target;
-    }
-    if (event.target.classList.contains("question-title-container")) {
-        return event.target.parentElement;
-    }
-    if (event.target.parentElement.classList.contains("question-title-container")) {
-        return event.target.parentElement.parentElement;
-    }
-    return false;
-}
-
-function clickToHideQuestion(event) {
-    const question = getQuestionFromClick(event);
-
-    if (question) {
-        changeQuestionVisibility(question);
-    }
-}
-
-function activeQuestionEvent(sectionElement) {
-    const questions = sectionElement.querySelectorAll(".question");
-
-    for (let i = 0; i < questions.length; i++) {
-        questions[i].addEventListener("click", clickToHideQuestion);
+        if (creationPage.section[sectionIndex] === creationPage.section.settings) {
+            formEvent(sectionElement, false);
+        }
     }
 }
