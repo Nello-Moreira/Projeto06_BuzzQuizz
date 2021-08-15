@@ -193,8 +193,12 @@ function hideHomePage(hide){
 function backToHomePage(){
     hideCreationPage(true);
     hideQuizzPage(true);
+
     renderLoaders();
+    hideUserQuizzes(false);
+    hideCreateQuizzBox(true);
     hideHomePage(false);
+
     scrollToHeader();
     getServerQuizzes();
 }
