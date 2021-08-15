@@ -90,12 +90,19 @@
     left: 25px;
 }
 
+#quizz-creation button {
+    width: 370px;
+    height: 54px;
+}
+
 @media (max-width: 1100px) {
     #quizz-creation {
         margin: calc(var(--header-height) + 35px) auto 20px;
         width: 100%;
     }
     #quizz-creation button {
+        width: 330px;
+        height: 54px;
         margin-top: 20px;
     }
 }
