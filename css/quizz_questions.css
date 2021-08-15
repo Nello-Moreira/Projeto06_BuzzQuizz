@@ -42,7 +42,7 @@
 
 #quizz h3{
     color: black;
-    //height: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     margin-top: 7.75px;

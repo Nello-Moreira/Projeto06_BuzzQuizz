@@ -125,7 +125,7 @@ function renderResult(levelIndex){
     activeQuizzElement.innerHTML += `
         <div class="quizz-result">
             <div class="quizz-result-header">
-                <h2>${activeQuizzObject.levels[levelIndex].title}</h2>
+                <h2>${quizzScore}% de acerto: ${activeQuizzObject.levels[levelIndex].title}</h2>
             </div>
 
             <div class="quizz-result-content">
@@ -159,7 +159,7 @@ function isAnswerCorrect(selectedAnswer){
 }
 
 function calcResult(){
-    quizzScore = (correctAnswersN / totalNQuestions) * 100;
+    quizzScore = Math.ceil((correctAnswersN / totalNQuestions) * 100);
 }
 
 function hideQuestions(questionN){
