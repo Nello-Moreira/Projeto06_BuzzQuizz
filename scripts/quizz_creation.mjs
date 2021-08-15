@@ -1,7 +1,7 @@
-export { activeTriggerEvents, removeTriggerEvents, visitQuizzCreated, backToHome };
+export { activeTriggerEvents, removeTriggerEvents };
 
 const axiosBase = axios.create({
-    baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v3/buzzquizz/quizzes',
+    baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v2/buzzquizz/quizzes'
 });
 
 const creationPage = {
@@ -20,27 +20,16 @@ const newQuizz = {
     levels: []
 };
 
-let visitQuizzCreated = false;
-let backToHome = false;
-
 function getSectionElement(section) {
     const page = document.getElementById("quizz-creation");
     return page.children[section];
 }
 
-function createQuizzObject() {
-    const settingsSection = getSectionElement(creationPage.section.settings);
-    const questionsSection = getSectionElement(creationPage.section.questions);
-    const levelsSection = getSectionElement(creationPage.section.levels);
-    const settingsForm = settingsSection.querySelector("form");
-
+function quizzQuestionValues(questionsSection) {
     const questions = [];
-    const levels = [];
     const questionForms = questionsSection.querySelectorAll("form");
-    const levelForms = levelsSection.querySelectorAll("form");
     let answers;
     let questionInputs;
-    let levelInputs;
 
     for (let i = 0; i < questionForms.length; i++) {
         questionInputs = questionForms[i].querySelectorAll("input");
@@ -64,24 +53,51 @@ function createQuizzObject() {
             answers
         })
     }
+    return questions;
+}
+
+function quizzLevelsValues(levelsSection) {
+    const levels = [];
+    const levelForms = levelsSection.querySelectorAll("form");
+
+    let levelInputs;
 
     for (let i = 0; i < levelForms.length; i++) {
         levelInputs = levelForms[i].querySelectorAll("input");
-        
+
         levels.push({
             title: levelInputs[0].value,
             image: levelInputs[2].value,
             text: levelForms[i].querySelector("textarea").value,
-            minValue: levelInputs[1].value
+            minValue: Number(levelInputs[1].value)
         })
     }
 
-    console.log({
+    return levels;
+}
+
+function createQuizzObject() {
+    const settingsSection = getSectionElement(creationPage.section.settings);
+    const questionsSection = getSectionElement(creationPage.section.questions);
+    const levelsSection = getSectionElement(creationPage.section.levels);
+    const settingsForm = settingsSection.querySelector("form");
+
+    return {
         title: settingsForm.querySelector("input[type=text]").value,
         image: settingsForm.querySelector("input[type=url]").value,
-        questions,
-        levels
-    });
+        questions: quizzQuestionValues(questionsSection),
+        levels: quizzLevelsValues(levelsSection)
+    };
+}
+
+function saveQuizz(response) {
+    console.log(response.data);
+    localStorage.setItem(response.data.id.toString(), JSON.stringify(response.data));
+}
+
+function sendQuizzToServer(quizz) {
+    axiosBase.post("", quizz)
+        .then(saveQuizz);
 }
 
 function validation(event) {
@@ -142,11 +158,26 @@ function refreshQuizzCoverPage(endSection) {
 }
 
 function visitQuizz(event) {
-    visitQuizzCreated = true;
+    const page = document.getElementById("quizz-creation");
+    const quizz = document.getElementById("quizz");
+
+    deleteQuestions();
+    deleteLevels();
+
+    page.classList.add("hidden");
+    quizz.classList.remove("hidden");
 }
 
 function goBackToHome(event) {
-    backToHome = true;
+    console.log("go back to home");
+    const page = document.getElementById("quizz-creation");
+    const home = document.getElementById("home");
+
+    deleteQuestions();
+    deleteLevels();
+
+    page.classList.add("hidden");
+    home.classList.remove("hidden");
 }
 
 function createTitleContainer(questionNumber, answerOrLevel) {
@@ -281,6 +312,15 @@ function createQuestions(sectionElement) {
     }
 }
 
+function deleteQuestions() {
+    const questionsSection = getSectionElement(creationPage.section.questions);
+    const questions = questionsSection.querySelectorAll(".question");
+
+    for (let i = questions.length - 1; i >= 0; i--) {
+        questions[i].remove();
+    }
+}
+
 function createLevelContentContainer(levelNumber) {
     const contentContainer = document.createElement("form");
     const levelTitleInput = document.createElement("input");
@@ -290,7 +330,7 @@ function createLevelContentContainer(levelNumber) {
 
     levelTitleInput.type = "text";
     levelTitleInput.placeholder = "Título do nível";
-    levelTitleInput.minlength = "10";
+    levelTitleInput.minLength = "10";
     levelTitleInput.required = true;
 
     levelPercentageInput.type = "number";
@@ -345,6 +385,15 @@ function createlevels(sectionElement) {
     }
 }
 
+function deleteLevels() {
+    const levelsSection = getSectionElement(creationPage.section.levels);
+    const levels = levelsSection.querySelectorAll(".level");
+
+    for (let i = levels.length - 1; i >= 0; i--) {
+        levels[i].remove();
+    }
+}
+
 function openNextSection(event) {
     const button = event.target;
     const sectionElement = button.parentElement;
@@ -369,14 +418,8 @@ function openNextSection(event) {
         if (sectionElement === allSections[creationPage.section.levels]) {
             formEvent(allSections[creationPage.section.questions], false);
             refreshQuizzCoverPage(allSections[creationPage.section.endSection]);
-            createQuizzObject();
 
-
-
-
-
-
-
+            sendQuizzToServer(createQuizzObject());
         }
     }
 }
@@ -426,26 +469,29 @@ function activeHideEvent(sectionElement) {
 
 function activeTriggerEvents() {
     let sectionElement = "";
-    let button = "";
+    let button1;
+    let button2;
 
     for (let sectionIndex in creationPage.section) {
         sectionElement = getSectionElement(creationPage.section[sectionIndex]);
-        button = sectionElement.querySelector("button");
+        button1 = sectionElement.querySelector("button");
 
-        if (button.classList.length === 1 || button.classList.contains("end-quizz")) {
-            button.addEventListener("click", openNextSection);
+        if (button1.classList.length === 1 || button1.classList.contains("end-quizz")) {
+            button1.addEventListener("click", openNextSection);
         }
-        if (button.classList.contains("open-quizz")) {
-            button.addEventListener("click", visitQuizz);
-        }
-        if (button.classList.contains("back-to-home")) {
-            button.addEventListener("click", goBackToHome);
+        if (button1.classList.contains("open-quizz")) {
+            button1.addEventListener("click", visitQuizz);
         }
 
         if (creationPage.section[sectionIndex] === creationPage.section.settings) {
             formEvent(sectionElement, true);
         }
     }
+    button2 = (sectionElement.querySelectorAll("button"))[1];
+    if (button2.classList.contains("back-to-home")) {
+        button2.addEventListener("click", goBackToHome);
+    }
+
 }
 
 function removeTriggerEvents() {
@@ -454,20 +500,22 @@ function removeTriggerEvents() {
 
     for (let sectionIndex in creationPage.section) {
         sectionElement = getSectionElement(creationPage.section[sectionIndex]);
-        button = sectionElement.querySelector("button");
+        button1 = sectionElement.querySelector("button");
 
-        if (button.classList.length === 1) {
-            button.removeEventListener("click", openNextSection);
+        if (button1.classList.length === 1) {
+            button1.removeEventListener("click", openNextSection);
         }
-        if (button.classList.contains("open-quizz")) {
-            button.removeEventListener("click", visitQuizz);
+        if (button1.classList.contains("open-quizz")) {
+            button1.removeEventListener("click", visitQuizz);
         }
-        if (button.classList.contains("back-to-home")) {
-            button.removeEventListener("click", goBackToHome);
-        }
+
 
         if (creationPage.section[sectionIndex] === creationPage.section.settings) {
             formEvent(sectionElement, false);
         }
+    }
+    button2 = (sectionElement.querySelectorAll("button"))[1];
+    if (button2.classList.contains("back-to-home")) {
+        button2.removeEventListener("click", goBackToHome);
     }
 }
