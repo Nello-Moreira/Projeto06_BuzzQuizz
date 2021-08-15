@@ -3,7 +3,7 @@ import { startQuizzClickEvents } from './quizz_questions.mjs';
 import { activeTriggerEvents, removeTriggerEvents } from './quizz_creation.mjs';
 
 const axiosBase = axios.create({
-    baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v3/buzzquizz/quizzes',
+    baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v2/buzzquizz/quizzes',
 });
 
 function scrollToHeader(){

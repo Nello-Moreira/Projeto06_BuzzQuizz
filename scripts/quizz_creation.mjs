@@ -87,17 +87,42 @@ function createQuizzObject() {
     };
 }
 
-function saveQuizz(response) {
-    let myQuizzes = localStorage.getItem("myQuizzes");
+function getUserQuizzesIDs() {
+    const myQuizzes = localStorage.getItem("myQuizzes");
 
-    if (!myQuizzes){
-        myQuizzes = [];
-    }else{
-        myQuizzes = JSON.parse(myQuizzes);
+    if (!myQuizzes) {
+        return [];
     }
+    return JSON.parse(myQuizzes);
+}
+
+function getUserQuizzesKeys(){
+    const myQuizzesKeys = localStorage.getItem("myQuizzesKeys");
+    if (!myQuizzesKeys) {
+        return {};
+    }
+    return JSON.parse(myQuizzesKeys);
+}
+
+function setUserQuizzesIDs(idsArray){
+    idsArray = JSON.stringify(idsArray);
+    localStorage.setItem("myQuizzes", idsArray);
+}
+
+function setUserQuizzesKeys(idsObject){
+    idsObject = JSON.stringify(idsObject);
+    localStorage.setItem("myQuizzesKeys", idsObject);
+}
+
+function saveQuizz(response) {
+    let myQuizzes = getUserQuizzesIDs();
+    let myQuizzesKeys = getUserQuizzesKeys();
+
     myQuizzes.push(response.data.id);
-    myQuizzes = JSON.stringify(myQuizzes);
-    localStorage.setItem("myQuizzes", myQuizzes);
+    myQuizzesKeys[response.data.id.toString()] = response.data.key;
+    setUserQuizzesIDs(myQuizzes);
+    setUserQuizzesKeys(myQuizzesKeys);
+    
     newQuizz.id = response.data.id;
 }
 
@@ -456,8 +481,8 @@ function resetCreationPage() {
     const settingsInputs = settings.querySelectorAll("input");
     settings.classList.remove("hidden");
     endSection.classList.add("hidden");
-    settingsInputs.forEach(element => {element.value = ""});
-    
+    settingsInputs.forEach(element => { element.value = "" });
+
     deleteQuestions();
     deleteLevels();
 }
@@ -522,4 +547,21 @@ function removeTriggerEvents() {
     if (button2.classList.contains("back-to-home")) {
         button2.removeEventListener("click", homeButtonHandler);
     }
+}
+
+function deleteQuizz(quizzId) {
+    let myQuizzesKeys = getUserQuizzesKeys();
+    let myQuizzes = getUserQuizzesIDs();
+    let idIndex = myQuizzes.indexOf(quizzId);
+
+    axiosBase.delete(`/${quizzId}`, {
+        headers: {
+            "Secret-Key": myQuizzesKeys[quizzId]
+        }
+    });
+    myQuizzes.splice(idIndex, 1);
+    delete(myQuizzesKeys[quizzId]);
+
+    setUserQuizzesIDs(myQuizzes);
+    setUserQuizzesKeys(myQuizzesKeys);
 }
