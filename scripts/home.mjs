@@ -6,6 +6,40 @@ let homePageELement = document.querySelector('#home');
 let serverQuizzesElement = document.querySelector('.server-quizzes .quizzes-list');
 let userQuizzesElement = document.querySelector('.user-quizzes .quizzes-list');
 
+let createdQuizzesIDs = [159, 158, 157, 156];
+let foundUserQuizz = false;
+let userQuizzesData = [];
+
+function hideCreateQuizzBox(hide){
+    if (hide === true) {
+        homePageELement.querySelector('.create-quizz').classList.add('hidden');
+    }
+    else if (hide === false){
+        homePageELement.querySelector('.create-quizz').classList.remove('hidden');
+    }
+}
+
+function hideUserQuizzes(hide){
+    if (hide === true) {
+        userQuizzesElement.parentElement.classList.add('hidden');
+    }
+    else if (hide === false){
+        userQuizzesElement.parentElement.classList.remove('hidden');
+    }
+
+}
+
+function filterUserQuizzes(quizzes){
+     for (let i = 0; i < quizzes.length; i++) {
+        createdQuizzesIDs.forEach(quizzID => {
+            if (quizzID === quizzes[i].id) {
+                foundUserQuizz = true;
+                userQuizzesData.push(quizzes.splice(i, 1));
+            }
+        });
+            
+     }
+}
 
 function startHomeClickEvents(){
      serverQuizzesElement.addEventListener('click', getClickedQuizzID);
@@ -17,16 +51,36 @@ function startHomeClickEvents(){
 
 function getServerQuizzes(){
     let promise = axiosBase.get();
-    promise.then(renderServerQuizzes); //futuramente fazer uma função para filtrar entre os quizzes do servidor, aqueles criados pelo usuário
+    promise.then((value) => {
+        
+        filterUserQuizzes(value.data);
+        renderUserQuizzes();
+        renderServerQuizzes(value.data);
+    });
 }
+
+function renderUserQuizzes(){
+    //console.log(userQuizzesData);
+    userQuizzesElement.innerHTML = '';
+    userQuizzesData.forEach( (data => {
+        console.log(data);
+        userQuizzesElement.innerHTML += `
+            <li class='quizz-card' name='quizz-ID-${data.id}'>
+                <img src="${data.image}" alt="">
+                <h4 name='quizz-ID-${data.id}'>${data.title}</h4>
+            </li>    
+        `
+    });
+}
+
 
 function renderServerQuizzes(quizzes){
     serverQuizzesElement.innerHTML = '';
-    for (let i = 0; i < quizzes.data.length; i++) {
+    for (let i = 0; i < quizzes.length; i++) {
         serverQuizzesElement.innerHTML += `
-            <li class='quizz-card' name='quizz-ID-${quizzes.data[i].id}'>
-                <img src="${quizzes.data[i].image}" alt="">
-                <h4 name='quizz-ID-${quizzes.data[i].id}'>${quizzes.data[i].title}</h4>
+            <li class='quizz-card' name='quizz-ID-${quizzes[i].id}'>
+                <img src="${quizzes[i].image}" alt="">
+                <h4 name='quizz-ID-${quizzes[i].id}'>${quizzes[i].title}</h4>
             </li>
         `
     }
@@ -47,7 +101,9 @@ function renderLoaders(){
 function getClickedQuizzID(event){
     let clickedQuizzID;
     clickedQuizzID = Number(event.target.getAttribute('name').substring(9));
-    startQuizz(clickedQuizzID);
+    if (typeof(clickedQuizzID) === 'number') {
+        startQuizz(clickedQuizzID);    
+    }
 }
 
 function hideHomePage(hide){
