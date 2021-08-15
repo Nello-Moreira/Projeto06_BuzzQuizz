@@ -1,5 +1,5 @@
 import { axiosBase, scrollToHeader, hideLoader } from './overall.mjs';
-import { backToHomePage, hideHomePage } from './home.mjs';
+import { backToHomePage, hideHomePage, hideCreationPage } from './home.mjs';
 
 let quizzPageElement = document.querySelector('#quizz');
 let activeQuizzElement = quizzPageElement.querySelector('.active-quizz-container');
@@ -58,6 +58,7 @@ function hideQuizzPage(hide){
 function startQuizz(quizzID){
     hideHomePage(true);
     hideLoader(false);
+    hideCreationPage(true);
     getQuestions(quizzID);
     scrollToHeader();
     resetScore();

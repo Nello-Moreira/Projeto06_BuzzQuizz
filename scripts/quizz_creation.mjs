@@ -1,5 +1,6 @@
 import { axiosBase } from './overall.mjs';
 import { backToHomePage } from './home.mjs';
+import { startQuizz } from './quizz_questions.mjs';
 
 export { activeTriggerEvents, removeTriggerEvents };
 
@@ -13,10 +14,7 @@ const creationPage = {
 };
 
 const newQuizz = {
-    title: "",
-    image: "",
-    questions: [],
-    levels: []
+    id: ""
 };
 
 function getSectionElement(section) {
@@ -100,6 +98,7 @@ function saveQuizz(response) {
     myQuizzes.push(response.data.id);
     myQuizzes = JSON.stringify(myQuizzes);
     localStorage.setItem("myQuizzes", myQuizzes);
+    newQuizz.id = response.data.id;
 }
 
 function sendQuizzToServer(quizz) {
@@ -162,17 +161,6 @@ function refreshQuizzCoverPage(endSection) {
 
     quizzCoverImgElement.src = inputCoverImg.value;
     quizzCoverTitleElement.innerHTML = inputTitle.value;
-}
-
-function visitQuizz(event) {
-    const page = document.getElementById("quizz-creation");
-    const quizz = document.getElementById("quizz");
-
-    deleteQuestions();
-    deleteLevels();
-
-    page.classList.add("hidden");
-    quizz.classList.remove("hidden");
 }
 
 function createTitleContainer(questionNumber, answerOrLevel) {
@@ -462,7 +450,7 @@ function activeHideEvent(sectionElement) {
     sectionChilds.forEach(element => element.addEventListener("click", clickToHideQuestion));
 }
 
-function homeButtonHandler(event) {
+function resetCreationPage() {
     const settings = getSectionElement(creationPage.section.settings);
     const endSection = getSectionElement(creationPage.section.endSection);
     const settingsInputs = settings.querySelectorAll("input");
@@ -472,6 +460,15 @@ function homeButtonHandler(event) {
     
     deleteQuestions();
     deleteLevels();
+}
+
+function visitQuizz(event) {
+    resetCreationPage()
+    startQuizz(newQuizz.id);
+}
+
+function homeButtonHandler(event) {
+    resetCreationPage()
     backToHomePage();
 }
 
