@@ -48,6 +48,7 @@ function filterClickedElement(event){
 function hideQuizzPage(hide){
     if (hide === true){
         quizzPageElement.classList.add('hidden');
+
     }
     else if (hide === false){
         quizzPageElement.classList.remove('hidden');
@@ -56,10 +57,13 @@ function hideQuizzPage(hide){
 }
 
 function startQuizz(quizzID){
+
     hideHomePage(true);
     hideLoader(false);
     hideCreationPage(true);
+
     getQuestions(quizzID);
+
     scrollToHeader();
     resetScore();
 }
@@ -70,11 +74,14 @@ function getTotalNQuestions(){
 
 function getQuestions(quizzID){
     let promise = axiosBase.get('/' + quizzID);
+
     promise.then((value) => {
         storeQuestions(value);
+
         getTotalNQuestions();
         hideLoader(true);
         hideQuizzPage(false);
+
         renderQuestions(activeQuizzObject);
     });
 }
@@ -85,8 +92,8 @@ function storeQuestions(value){
 
 function renderQuestions(){
     let quizzAnswers;
+
     activeQuizzElement.innerHTML = `
-    
     <div class="quizz-header">
             <img src="${activeQuizzObject.image}" alt="">
             <h1>${activeQuizzObject.title}</h1>
@@ -110,6 +117,7 @@ function renderQuestions(){
         sortAnswers(activeQuizzObject.questions[questionN].answers);
 
         activeQuizzObject.questions[questionN].answers.forEach((answer) => {
+
             quizzAnswers.innerHTML += `
                 <li class="${specifyAnswerColor(answer.isCorrectAnswer)}">
                     <img src="${answer.image}" alt="">
@@ -122,6 +130,7 @@ function renderQuestions(){
 }
 
 function renderResult(levelIndex){
+
     activeQuizzElement.innerHTML += `
         <div class="quizz-result">
             <div class="quizz-result-header">
@@ -136,6 +145,7 @@ function renderResult(levelIndex){
     `;
 
         let quizzResult = activeQuizzElement.querySelector('.quizz-result');
+
         unhideNextQuestion(quizzResult);
         scrollNextQuestion(quizzResult);
 }
@@ -144,6 +154,7 @@ function getLevelIndex () {
     let levelIndex;
     
     for (let i = 0; i < activeQuizzObject.levels.length; i++) {
+
         if (quizzScore >= activeQuizzObject.levels[i].minValue) {
             levelIndex = i;
         }
@@ -165,6 +176,7 @@ function calcResult(){
 function hideQuestions(questionN){
     if (questionN > 0) {
         return 'hidden';
+
     }
     else {
         return '';
@@ -174,6 +186,7 @@ function hideQuestions(questionN){
 function specifyAnswerColor(isCorrectAnswer){
     if (isCorrectAnswer){
         return 'right-green';
+
     }
     else if(!isCorrectAnswer){
         return 'wrong-red';
@@ -193,8 +206,8 @@ function findNextQuestion(currentQuestion){
 
     if (nextQuestion == null) {
         calcResult();
-        //renderResult(getLevelIndex());
         setTimeout(renderResult,2000,getLevelIndex());
+
     }
     else {
         setTimeout(unhideNextQuestion, 2000, nextQuestion);
@@ -210,8 +223,6 @@ function setQuestionAnswered(selectedAnswer){
     let currentQuestion = selectedAnswer.parentNode.parentNode.parentNode;
     currentQuestion.classList.add('answered');
 
-    
-
     findNextQuestion(currentQuestion);
 }
     
@@ -220,8 +231,6 @@ function sortAnswers(array){
         return Math.random() - 0.5; 
     });
 }
-
-
 
 
 

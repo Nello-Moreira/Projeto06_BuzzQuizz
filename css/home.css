@@ -76,12 +76,6 @@
     transition: all 80ms linear;
 }
 
-#home .quizzes-list li.quizzes-list-loader{
-    border: 1px solid rgb(236, 54, 45);;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
 #home .quizzes-list li .lds-default{
     position: absolute;
     left: 50%;
