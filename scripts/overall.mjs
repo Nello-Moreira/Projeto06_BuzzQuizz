@@ -1,4 +1,4 @@
-import { startHomeClickEvents, getServerQuizzes } from './home.mjs';
+import { startHomeClickEvents, getServerQuizzes, backToHomePage } from './home.mjs';
 import { startQuizzClickEvents } from './quizz_questions.mjs';
 import { activeTriggerEvents, removeTriggerEvents } from './quizz_creation.mjs';
 
@@ -19,10 +19,9 @@ function hideLoader(hide){
     }
 }
 
-getServerQuizzes();
+backToHomePage();
 startHomeClickEvents();
 startQuizzClickEvents();
 activeTriggerEvents();
-
 
 export {scrollToHeader, hideLoader, axiosBase};
