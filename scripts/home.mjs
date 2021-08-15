@@ -107,7 +107,9 @@ function renderLoaders(){
     for (let i = 0; i < 3; i++) {
         serverQuizzesElement.innerHTML += `
             <li class="quizzes-list-loader">
-                <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                <div class="lds-default">
+                    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                </div>
             </li>
         `
         
@@ -116,19 +118,29 @@ function renderLoaders(){
     for (let i = 0; i < 3; i++) {
         userQuizzesElement.innerHTML += `
             <li class="quizzes-list-loader">
-                <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                <div class="lds-default">
+                    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                </div>
             </li>
         `
         
     }
 }
 
+function addLoaderDeletingCard(target){
+    target.parentElement.parentElement.innerHTML += `
+            <div class="lds-default">
+                <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            </div>
+        `;
+}
+
 function deletePrompt(target, clickedQuizzID){
     const deletionConfirm = window.confirm(`Quer mesmo deletar o quizz "${target.parentElement.parentElement.querySelector('h4').innerHTML}"?`);
 
     if (deletionConfirm) {
+        addLoaderDeletingCard(target);
         deleteQuizz(clickedQuizzID);
-        //backToHomePage();
     }
 }
 
@@ -140,8 +152,7 @@ function getClickedQuizzOption(target, clickedQuizzID){
         deletePrompt(target, clickedQuizzID);
 
     } else if (target.classList.contains('edit-quizz-button')) {
-        editQuizz(clickedQuizzID);
-
+        editQuizz(clickedQuizzID);        
     }
 }
 
@@ -182,9 +193,9 @@ function hideHomePage(hide){
 function backToHomePage(){
     hideCreationPage(true);
     hideQuizzPage(true);
+    renderLoaders();
     hideHomePage(false);
     scrollToHeader();
-    renderLoaders();
     getServerQuizzes();
 }
 

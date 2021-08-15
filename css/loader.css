@@ -107,3 +107,9 @@
   color: rgba(236, 54, 45, 1);
   margin-top: 20px;
 }
+
+#home .quizzes-list li.quizzes-list-loader{
+  border: 1px solid rgb(236, 54, 45);;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
