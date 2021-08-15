@@ -92,6 +92,7 @@ function renderServerQuizzes(quizzes){
             <li class='quizz-card' name='quizz-ID-${quizzes[i].id}'>
                 <img src="${quizzes[i].image}" alt="">
                 <h4 name='quizz-ID-${quizzes[i].id}'>${quizzes[i].title}</h4>
+                <ion-icon class='delete-quizz-button' name="trash-outline"></ion-icon>
             </li>
         `
     }
