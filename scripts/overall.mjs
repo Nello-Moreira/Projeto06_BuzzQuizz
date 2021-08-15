@@ -1,5 +1,5 @@
 import { startHomeClickEvents, getServerQuizzes, backToHomePage } from './home.mjs';
-import { startQuizzClickEvents } from './quizz_questions.mjs';
+import { startQuizzClickEvents, quizzPageElement } from './quizz_questions.mjs';
 import { activeTriggerEvents, removeTriggerEvents } from './quizz_creation.mjs';
 
 const axiosBase = axios.create({
@@ -8,6 +8,16 @@ const axiosBase = axios.create({
 
 function scrollToHeader(){
     window.scrollTo(0,0);
+}
+
+function hideQuizzPage(hide){
+    if (hide === true){
+        quizzPageElement.classList.add('hidden');
+
+    }
+    else if (hide === false){
+        quizzPageElement.classList.remove('hidden');
+    }   
 }
 
 function hideLoader(hide){
@@ -24,4 +34,4 @@ startHomeClickEvents();
 startQuizzClickEvents();
 activeTriggerEvents();
 
-export {scrollToHeader, hideLoader, axiosBase};
+export {scrollToHeader, hideLoader, axiosBase, hideQuizzPage};

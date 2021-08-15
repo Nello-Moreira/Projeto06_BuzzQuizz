@@ -1,4 +1,4 @@
-import { axiosBase, scrollToHeader, hideLoader } from './overall.mjs';
+import { axiosBase, scrollToHeader, hideLoader, hideQuizzPage} from './overall.mjs';
 import { backToHomePage, hideHomePage, hideCreationPage } from './home.mjs';
 
 let quizzPageElement = document.querySelector('#quizz');
@@ -41,19 +41,6 @@ function filterClickedElement(event){
     if (isAnswer(event.target) && !isAnswered(event.target)) { 
             setQuestionAnswered(event.target);
     }
-}
-
-
-
-function hideQuizzPage(hide){
-    if (hide === true){
-        quizzPageElement.classList.add('hidden');
-
-    }
-    else if (hide === false){
-        quizzPageElement.classList.remove('hidden');
-    }
-    
 }
 
 function startQuizz(quizzID){
@@ -235,4 +222,4 @@ function sortAnswers(array){
 
 
 
-export { startQuizz, hideQuizzPage, startQuizzClickEvents };
+export { startQuizz, startQuizzClickEvents, quizzPageElement };

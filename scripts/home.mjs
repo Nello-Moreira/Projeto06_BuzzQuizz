@@ -1,5 +1,5 @@
-import { scrollToHeader, axiosBase } from './overall.mjs';
-import { startQuizz, hideQuizzPage } from './quizz_questions.mjs';
+import { scrollToHeader, axiosBase, hideQuizzPage } from './overall.mjs';
+import { startQuizz } from './quizz_questions.mjs';
 import { deleteQuizz, editQuizz } from './quizz_creation.mjs';
 
 let homePageELement = document.querySelector('#home');
@@ -198,7 +198,7 @@ function getClickedQuizzID(event){
 function hideHomePage(hide){
     if (hide === true){
         homePageELement.classList.add('hidden');
-        
+
     }
     else if (hide === false){
         homePageELement.classList.remove('hidden');
