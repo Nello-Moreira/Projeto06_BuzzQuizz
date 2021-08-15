@@ -128,7 +128,7 @@ function deletePrompt(target, clickedQuizzID){
 
     if (deletionConfirm) {
         deleteQuizz(clickedQuizzID);
-        backToHomePage();
+        //backToHomePage();
     }
 }
 
