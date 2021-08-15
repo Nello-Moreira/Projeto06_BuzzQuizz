@@ -36,14 +36,13 @@ function filterUserQuizzes(quizzes){
     foundUserQuizz = false;
     userQuizzesData = [];
     getUserQuizzesIDs();
-        
     if (createdQuizzesIDs) {
         for (let i = 0; i < quizzes.length; i++) {
             createdQuizzesIDs.forEach(quizzID => {
                 if (quizzID === quizzes[i].id) {
                     foundUserQuizz = true;
                     userQuizzesData.push(quizzes.splice(i, 1));
-                    console.log(userQuizzesData);
+                    i--;
                 }
             });        
         }   
