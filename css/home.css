@@ -68,6 +68,12 @@
     width: 340px;
     height: 181px;
     position: relative;
+    overflow: hidden;
+}
+
+#home .quizzes-list li:hover .edit-delete-box {
+    right: 0;
+    transition: all 80ms linear;
 }
 
 #home .quizzes-list li.quizzes-list-loader{
@@ -81,6 +87,27 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+
+#home .quizzes-list li .edit-delete-box {
+    background-color: red;
+    position: absolute;
+    right: -43px;
+    top: 9px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 43px;
+    height: 87px;
+    border-radius: 10px 0 0 10px;
+    transition: all 50ms linear;
+}
+
+#home .quizzes-list li .edit-delete-box ion-icon {
+    font-size: 18px;
+    --ionicon-stroke-width: 36px;
+    color: white;
 }
 
 #home .quizzes-list li.quizz-card::before {
@@ -146,5 +173,8 @@
     }
     #home .user-quizzes div {
         justify-content: space-between;
+    }
+    #home .quizzes-list li .edit-delete-box {
+        right:  0;
     }
 }

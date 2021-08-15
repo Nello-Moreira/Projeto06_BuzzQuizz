@@ -499,7 +499,7 @@ function visitQuizz(event) {
 }
 
 function homeButtonHandler(event) {
-    resetCreationPage()
+    resetCreationPage();
     backToHomePage();
 }
 

@@ -1,5 +1,6 @@
 import { scrollToHeader, axiosBase } from './overall.mjs';
 import { startQuizz, hideQuizzPage } from './quizz_questions.mjs';
+import { deleteQuizz, editQuizz } from './quizz_creation.mjs';
 
 let homePageELement = document.querySelector('#home');
 let serverQuizzesElement = document.querySelector('.server-quizzes .quizzes-list');
@@ -78,7 +79,11 @@ function renderUserQuizzes(){
         userQuizzesElement.innerHTML += `
             <li class='quizz-card' name='quizz-ID-${data[0].id}'>
                 <img src="${data[0].image}" alt="">
-                <h4 name='quizz-ID-${data[0].id}'>${data[0].title}</h4>
+                <h4>${data[0].title}</h4>
+                <div class='edit-delete-box'>
+                    <ion-icon class='edit-quizz-button' name="create-outline"></ion-icon>
+                    <ion-icon class='delete-quizz-button' name="trash-outline"></ion-icon>
+                </div>
             </li>    
         `
     });
@@ -91,8 +96,7 @@ function renderServerQuizzes(quizzes){
         serverQuizzesElement.innerHTML += `
             <li class='quizz-card' name='quizz-ID-${quizzes[i].id}'>
                 <img src="${quizzes[i].image}" alt="">
-                <h4 name='quizz-ID-${quizzes[i].id}'>${quizzes[i].title}</h4>
-                <ion-icon class='delete-quizz-button' name="trash-outline"></ion-icon>
+                <h4>${quizzes[i].title}</h4>
             </li>
         `
     }
@@ -119,12 +123,50 @@ function renderLoaders(){
     }
 }
 
+function deletePrompt(target, clickedQuizzID){
+    const deletionConfirm = window.confirm(`Quer mesmo deletar o quizz "${target.parentElement.parentElement.querySelector('h4').innerHTML}"?`);
+
+    if (deletionConfirm) {
+        deleteQuizz(clickedQuizzID);
+        backToHomePage();
+    }
+}
+
+function getClickedQuizzOption(target, clickedQuizzID){
+    if (target.tagName === 'LI' || target.tagName === 'H4') {
+        startQuizz(clickedQuizzID);
+
+    }else if (target.classList.contains('delete-quizz-button')) {
+        deletePrompt(target, clickedQuizzID);
+
+    } else if (target.classList.contains('edit-quizz-button')) {
+        editQuizz(clickedQuizzID);
+
+    }
+}
+
 function getClickedQuizzID(event){
     let clickedQuizzID;
-    clickedQuizzID = Number(event.target.getAttribute('name').substring(9));
-    if (typeof(clickedQuizzID) === 'number') {
-        startQuizz(clickedQuizzID);    
+
+    if (event.target.tagName === 'LI') {
+
+        clickedQuizzID = Number(event.target.getAttribute('name').substring(9));
+
+    } else if (event.target.tagName === 'H4') {
+
+        clickedQuizzID = Number(event.target.parentElement.getAttribute('name').substring(9));
+
+    } else if (event.target.tagName === 'ION-ICON'){
+
+        clickedQuizzID = Number(event.target.parentElement.parentElement.getAttribute('name').substring(9));
+
     }
+
+     if (typeof(clickedQuizzID) === 'number') {
+        
+        getClickedQuizzOption(event.target, clickedQuizzID);
+
+     }
 }
 
 function hideHomePage(hide){
