@@ -6,7 +6,7 @@ let homePageELement = document.querySelector('#home');
 let serverQuizzesElement = document.querySelector('.server-quizzes .quizzes-list');
 let userQuizzesElement = document.querySelector('.user-quizzes .quizzes-list');
 
-let createdQuizzesIDs = [159, 158, 157, 156];
+let createdQuizzesIDs = [170];
 let foundUserQuizz = false;
 let userQuizzesData = [];
 
@@ -37,10 +37,13 @@ function filterUserQuizzes(quizzes){
                 foundUserQuizz = true;
                 userQuizzesData.push(quizzes.splice(i, 1));
             }
-        });
-            
-     }
+        });        
+    }
+
+    hideUserQuizzes(!foundUserQuizz);
+    hideCreateQuizzBox(foundUserQuizz);
 }
+
 
 function startHomeClickEvents(){
      serverQuizzesElement.addEventListener('click', getClickedQuizzID);
@@ -63,7 +66,6 @@ function getServerQuizzes(){
 function renderUserQuizzes(){
     userQuizzesElement.innerHTML = '';
     userQuizzesData.forEach(data => {
-        console.log(data[0]);
         userQuizzesElement.innerHTML += `
             <li class='quizz-card' name='quizz-ID-${data[0].id}'>
                 <img src="${data[0].image}" alt="">
@@ -131,6 +133,7 @@ function backToHomePage(){
     hideHomePage(false);
     scrollToHeader();
     renderLoaders();
+    foundUserQuizz = false;
     getServerQuizzes();
 }
 
