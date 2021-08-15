@@ -33,15 +33,22 @@ function hideUserQuizzes(hide){
 }
 
 function filterUserQuizzes(quizzes){
+    foundUserQuizz = false;
     userQuizzesData = [];
-     for (let i = 0; i < quizzes.length; i++) {
-        createdQuizzesIDs.forEach(quizzID => {
-            if (quizzID === quizzes[i].id) {
-                foundUserQuizz = true;
-                userQuizzesData.push(quizzes.splice(i, 1));
-            }
-        });        
+    getUserQuizzesIDs();
+        
+    if (createdQuizzesIDs) {
+        for (let i = 0; i < quizzes.length; i++) {
+            createdQuizzesIDs.forEach(quizzID => {
+                if (quizzID === quizzes[i].id) {
+                    foundUserQuizz = true;
+                    userQuizzesData.push(quizzes.splice(i, 1));
+                    console.log(userQuizzesData);
+                }
+            });        
+        }   
     }
+     
 
     hideUserQuizzes(!foundUserQuizz);
     hideCreateQuizzBox(foundUserQuizz);
@@ -136,8 +143,6 @@ function backToHomePage(){
     hideHomePage(false);
     scrollToHeader();
     renderLoaders();
-    foundUserQuizz = false;
-    getUserQuizzesIDs();
     getServerQuizzes();
 }
 
