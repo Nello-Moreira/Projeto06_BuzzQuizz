@@ -3,7 +3,7 @@ import { backToHomePage } from './home.mjs';
 export { activeTriggerEvents, removeTriggerEvents };
 
 const axiosBase = axios.create({
-    baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v3/buzzquizz/quizzes'
+    baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v2/buzzquizz/quizzes'
 });
 
 const creationPage = {
@@ -93,8 +93,16 @@ function createQuizzObject() {
 }
 
 function saveQuizz(response) {
-    console.log(response.data);
-    localStorage.setItem(response.data.id.toString(), JSON.stringify(response.data));
+    let myQuizzes = localStorage.getItem("myQuizzes");
+
+    if (!myQuizzes){
+        myQuizzes = [];
+    }else{
+        myQuizzes = JSON.parse(myQuizzes);
+    }
+    myQuizzes.push(response.data.id);
+    myQuizzes = JSON.stringify(myQuizzes);
+    localStorage.setItem("myQuizzes", myQuizzes);
 }
 
 function sendQuizzToServer(quizz) {
@@ -458,6 +466,13 @@ function activeHideEvent(sectionElement) {
 }
 
 function homeButtonHandler(event) {
+    const settings = getSectionElement(creationPage.section.settings);
+    const endSection = getSectionElement(creationPage.section.endSection);
+    const settingsInputs = settings.querySelectorAll("input");
+    settings.classList.remove("hidden");
+    endSection.classList.add("hidden");
+    settingsInputs.forEach(element => {element.value = ""});
+    
     deleteQuestions();
     deleteLevels();
     backToHomePage();
