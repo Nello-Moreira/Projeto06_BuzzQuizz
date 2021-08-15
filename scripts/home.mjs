@@ -30,6 +30,7 @@ function hideUserQuizzes(hide){
 }
 
 function filterUserQuizzes(quizzes){
+    userQuizzesData = [];
      for (let i = 0; i < quizzes.length; i++) {
         createdQuizzesIDs.forEach(quizzID => {
             if (quizzID === quizzes[i].id) {
@@ -60,14 +61,13 @@ function getServerQuizzes(){
 }
 
 function renderUserQuizzes(){
-    //console.log(userQuizzesData);
     userQuizzesElement.innerHTML = '';
-    userQuizzesData.forEach( (data => {
-        console.log(data);
+    userQuizzesData.forEach(data => {
+        console.log(data[0]);
         userQuizzesElement.innerHTML += `
-            <li class='quizz-card' name='quizz-ID-${data.id}'>
-                <img src="${data.image}" alt="">
-                <h4 name='quizz-ID-${data.id}'>${data.title}</h4>
+            <li class='quizz-card' name='quizz-ID-${data[0].id}'>
+                <img src="${data[0].image}" alt="">
+                <h4 name='quizz-ID-${data[0].id}'>${data[0].title}</h4>
             </li>    
         `
     });
@@ -90,6 +90,15 @@ function renderLoaders(){
     serverQuizzesElement.innerHTML = '';
     for (let i = 0; i < 3; i++) {
         serverQuizzesElement.innerHTML += `
+            <li class="quizzes-list-loader">
+                <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            </li>
+        `
+        
+    }
+    userQuizzesElement.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+        userQuizzesElement.innerHTML += `
             <li class="quizzes-list-loader">
                 <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
             </li>
