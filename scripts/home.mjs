@@ -1,14 +1,17 @@
-import { scrollToHeader } from './overall.mjs';
-import { axiosBase } from './overall.mjs';
+import { scrollToHeader, axiosBase } from './overall.mjs';
 import { startQuizz, hideQuizzPage } from './quizz_questions.mjs';
 
 let homePageELement = document.querySelector('#home');
 let serverQuizzesElement = document.querySelector('.server-quizzes .quizzes-list');
 let userQuizzesElement = document.querySelector('.user-quizzes .quizzes-list');
 
-let createdQuizzesIDs = [170];
+let createdQuizzesIDs = [];
 let foundUserQuizz = false;
 let userQuizzesData = [];
+
+function getUserQuizzesIDs(){
+    createdQuizzesIDs = JSON.parse(localStorage.getItem('myQuizzes'));
+}
 
 function hideCreateQuizzBox(hide){
     if (hide === true) {
@@ -134,6 +137,7 @@ function backToHomePage(){
     scrollToHeader();
     renderLoaders();
     foundUserQuizz = false;
+    getUserQuizzesIDs();
     getServerQuizzes();
 }
 

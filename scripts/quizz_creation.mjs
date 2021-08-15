@@ -1,10 +1,7 @@
+import { axiosBase } from './overall.mjs';
 import { backToHomePage } from './home.mjs';
 
 export { activeTriggerEvents, removeTriggerEvents };
-
-const axiosBase = axios.create({
-    baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v2/buzzquizz/quizzes'
-});
 
 const creationPage = {
     section: {

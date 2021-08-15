@@ -42,11 +42,12 @@
 
 #quizz h3{
     color: black;
-    height: 34px;
+    //height: 34px;
     display: flex;
     align-items: center;
     margin-top: 7.75px;
     margin-bottom: 18.61px;
+    width: calc((100% - 21px) / 2);
 }
 
 #quizz .quizz-header {
@@ -128,7 +129,7 @@
 
 .quizz-result-content{
     display: flex;
-    gap: 21px;
+    
 }
 
 .quizz-result img{
