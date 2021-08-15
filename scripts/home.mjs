@@ -2,6 +2,8 @@ import { scrollToHeader } from './overall.mjs';
 import { axiosBase } from './overall.mjs';
 import { startQuizz, hideQuizzPage } from './quizz_questions.mjs';
 
+export { startHomeClickEvents, getServerQuizzes, backToHomePage };
+
 let homePageELement = document.querySelector('#home');
 let serverQuizzesElement = document.querySelector('.server-quizzes .quizzes-list');
 let userQuizzesElement = document.querySelector('.user-quizzes .quizzes-list');
@@ -74,5 +76,3 @@ function hideCreationPage(hide){
         creationPageELement.classList.remove('hidden');
     }
 }
-//////////////////////////////////////////////////////////////////////////////////////
-export { startHomeClickEvents, getServerQuizzes, backToHomePage };
