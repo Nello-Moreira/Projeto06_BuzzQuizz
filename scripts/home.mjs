@@ -160,4 +160,4 @@ function hideCreationPage(hide){
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////
-export { startHomeClickEvents, getServerQuizzes, backToHomePage, hideHomePage, hideCreationPage };
+export { startHomeClickEvents, getServerQuizzes, backToHomePage, hideHomePage, hideCreationPage, startCreation };

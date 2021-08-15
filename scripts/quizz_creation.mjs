@@ -1,8 +1,7 @@
-import { axiosBase } from './overall.mjs';
-import { backToHomePage } from './home.mjs';
+import { axiosBase, hideLoader } from './overall.mjs';
+import { backToHomePage, startCreation } from './home.mjs';
 import { startQuizz } from './quizz_questions.mjs';
 
-export { activeTriggerEvents, removeTriggerEvents };
 
 const creationPage = {
     section: {
@@ -16,6 +15,8 @@ const creationPage = {
 const newQuizz = {
     id: ""
 };
+
+const creatingQuizz = true;
 
 function getSectionElement(section) {
     const page = document.getElementById("quizz-creation");
@@ -128,7 +129,10 @@ function saveQuizz(response) {
 
 function sendQuizzToServer(quizz) {
     axiosBase.post("", quizz)
-        .then(saveQuizz);
+        .then((response) => {
+            hideLoader(true);
+            saveQuizz(response);
+        });
 }
 
 function validation(event) {
@@ -300,10 +304,10 @@ function createQuestionContentContainer() {
     return contentContainer;
 }
 
-function createQuestions(sectionElement) {
+function createQuestions(sectionElement, numberOfQuestions=false) {
     const endOfSectioButton = sectionElement.querySelector("button");
     const settingsSection = (sectionElement.parentElement.children)[creationPage.section.settings];
-    const numberOfQuestions = settingsSection.querySelector("input[type='number']").value;
+    numberOfQuestions = numberOfQuestions || settingsSection.querySelector("input[type='number']").value;
     let questionContainer;
 
     for (let i = 0; i < numberOfQuestions; i++) {
@@ -373,10 +377,10 @@ function createLevelContentContainer(levelNumber) {
     return contentContainer;
 }
 
-function createlevels(sectionElement) {
+function createlevels(sectionElement, numberOfLevels) {
     const endOfSectioButton = sectionElement.querySelector("button");
     const settingsSection = (sectionElement.parentElement.children)[creationPage.section.settings];
-    const numberOfLevels = (settingsSection.querySelectorAll("input[type='number']"))[1].value;
+    numberOfLevels = numberOfLevels || (settingsSection.querySelectorAll("input[type='number']"))[1].value;
     let levelContainer;
 
     for (let i = 0; i < numberOfLevels; i++) {
@@ -426,6 +430,8 @@ function openNextSection(event) {
         if (sectionElement === allSections[creationPage.section.levels]) {
             formEvent(allSections[creationPage.section.questions], false);
             refreshQuizzCoverPage(allSections[creationPage.section.endSection]);
+            hideLoader(false);
+
 
             sendQuizzToServer(createQuizzObject());
         }
@@ -565,3 +571,17 @@ function deleteQuizz(quizzId) {
     setUserQuizzesIDs(myQuizzes);
     setUserQuizzesKeys(myQuizzesKeys);
 }
+
+function editQuizzHandler(response) {
+    const allSections = document.querySelector("#quizz-creation").children
+
+    const quizzSettings = allSections[creationPage.section.settings].querySelectorAll("inputs")
+    quizzSettings
+}
+
+function editQuizz(quizzId){
+    startCreation();
+    axiosBase.get(`/${quizzId}`).then(editQuizzHandler);
+}
+
+export { activeTriggerEvents, removeTriggerEvents, deleteQuizz, editQuizz };
