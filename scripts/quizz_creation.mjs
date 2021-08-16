@@ -551,7 +551,7 @@ function visitQuizz(event) {
 }
 
 function homeButtonHandler(event) {
-    resetCreationPage()
+    resetCreationPage();
     backToHomePage();
 }
 
@@ -616,7 +616,7 @@ function deleteQuizz(quizzId) {
         headers: {
             "Secret-Key": myQuizzesKeys[quizzId]
         }
-    });
+    }).then(backToHomePage);
     myQuizzes.splice(idIndex, 1);
     delete (myQuizzesKeys[quizzId]);
 
