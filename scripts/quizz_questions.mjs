@@ -1,9 +1,9 @@
-import { axiosBase, scrollToHeader, hideLoader, hideQuizzPage, hideHomePage, hideCreationPage} from './overall.mjs';
+import { quizzPageElement, axiosBase, scrollToHeader, hideLoader, hideQuizzPage, hideHomePage, hideCreationPage} from './overall.mjs';
 import { backToHomePage } from './home.mjs';
 
-let quizzPageElement = document.querySelector('#quizz');
-let activeQuizzElement = quizzPageElement.querySelector('.active-quizz-container');
+
 let activeQuizzObject = {};
+let activeQuizzElement = document.querySelector('.active-quizz-container');
 
 let correctAnswersN;
 let totalNQuestions;
@@ -222,4 +222,4 @@ function sortAnswers(array){
 
 
 
-export { startQuizz, startQuizzClickEvents, quizzPageElement };
+export { startQuizz, startQuizzClickEvents };

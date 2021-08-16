@@ -1,9 +1,9 @@
 import { startHomeClickEvents, getServerQuizzes, backToHomePage } from './home.mjs';
-import { startQuizzClickEvents, quizzPageElement } from './quizz_questions.mjs';
+import { startQuizzClickEvents } from './quizz_questions.mjs';
 import { activeTriggerEvents, removeTriggerEvents } from './quizz_creation.mjs';
 
 let homePageELement = document.querySelector('#home');
-
+let quizzPageElement = document.querySelector('#quizz');
 let creationPageELement = document.querySelector('#quizz-creation');
 
 const axiosBase = axios.create({
@@ -58,4 +58,4 @@ startHomeClickEvents();
 startQuizzClickEvents();
 activeTriggerEvents();
 
-export {homePageELement, scrollToHeader, hideLoader, axiosBase, hideQuizzPage, hideHomePage, hideCreationPage};
+export {homePageELement, quizzPageElement, scrollToHeader, hideLoader, axiosBase, hideQuizzPage, hideHomePage, hideCreationPage};
