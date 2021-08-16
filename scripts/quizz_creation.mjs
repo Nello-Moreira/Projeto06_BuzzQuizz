@@ -37,7 +37,6 @@ function quizzQuestionValues(questionsSection) {
             if (questionInputs[j].value === "") {
                 break;
             }
-
             answers.push({
                 text: questionInputs[j].value,
                 image: questionInputs[j + 1].value,
@@ -57,7 +56,6 @@ function quizzQuestionValues(questionsSection) {
 function quizzLevelsValues(levelsSection) {
     const levels = [];
     const levelForms = levelsSection.querySelectorAll("form");
-
     let levelInputs;
 
     for (let i = 0; i < levelForms.length; i++) {
@@ -70,7 +68,6 @@ function quizzLevelsValues(levelsSection) {
             minValue: Number(levelInputs[1].value)
         })
     }
-
     return levels;
 }
 
@@ -99,6 +96,7 @@ function getUserQuizzesIDs() {
 
 function getUserQuizzesKeys() {
     const myQuizzesKeys = localStorage.getItem("myQuizzesKeys");
+
     if (!myQuizzesKeys) {
         return {};
     }
@@ -154,6 +152,7 @@ function validation(event) {
 
 function formEvent(sectionElement, active) {
     const forms = sectionElement.querySelectorAll("form");
+
     if (active) {
         forms.forEach(element => element.addEventListener("change", validation));
         return;
@@ -261,6 +260,7 @@ function createAnswers(numberOfAnswers, answerClasses) {
         } else {
             answerTextInput.placeholder = "Resposta incorreta " + (i + 1);
             answerImgInput.placeholder = "URL da imagem " + (i + 1);
+
             if (i > 0) {
                 answerTextInput.placeholder += " (opcional)";
                 answerImgInput.placeholder += " (opcional)";
@@ -270,11 +270,9 @@ function createAnswers(numberOfAnswers, answerClasses) {
             answerTextInput.required = true;
             answerImgInput.required = true;
         }
-
         for (let singleClass of answerClasses) {
             li.classList.add(singleClass);
         }
-
         li.appendChild(answerTextInput);
         li.appendChild(answerImgInput);
         ul.appendChild(li);
@@ -348,6 +346,7 @@ function createLevelContentContainer(levelNumber) {
     levelPercentageInput.type = "number";
     levelPercentageInput.placeholder = "% de acerto mínima";
     levelPercentageInput.required = true;
+
     if (levelNumber === 1) {
         levelPercentageInput.min = 0;
         levelPercentageInput.max = 0;
@@ -439,9 +438,21 @@ function fillLevelsToEdit() {
         formInputs[0].value = quizzToEdit.levels[i].title;
         formInputs[1].value = quizzToEdit.levels[i].minValue;
         formInputs[2].value = quizzToEdit.levels[i].image;
-        formInputs[3].value = quizzToEdit.levels[i].text;
+        levels[i].querySelector("textarea").value = quizzToEdit.levels[i].text;
     }
 };
+
+function changeQuizzOnServer(quizz) {
+    axiosBase.put(`/${quizzToEdit.id}`, quizz, {
+        headers: {
+            "Secret-Key": getUserQuizzesKeys()[quizzToEdit.id]
+        }
+    }).then((response) => {
+        newQuizz.id = quizzToEdit.id;
+        quizzToEdit = false;
+        hideLoader(true);
+    });
+}
 
 function openNextSection(event) {
     const button = event.target;
@@ -478,11 +489,7 @@ function openNextSection(event) {
             hideLoader(false);
 
             if (quizzToEdit) {
-                axiosBase.put(`/${quizzToEdit.id}`, {
-                    headers: {
-                        "Secret-Key": getUserQuizzesKeys(quizzId)
-                    }
-                }).then(response => quizzToEdit = false);
+                changeQuizzOnServer(createQuizzObject());
             } else {
                 sendQuizzToServer(createQuizzObject());
             }
@@ -570,12 +577,12 @@ function activeTriggerEvents() {
         if (button1.classList.contains("open-quizz")) {
             button1.addEventListener("click", visitQuizz);
         }
-
         if (creationPage.section[sectionIndex] === creationPage.section.settings) {
             formEvent(sectionElement, true);
         }
     }
     button2 = (sectionElement.querySelectorAll("button"))[1];
+
     if (button2.classList.contains("back-to-home")) {
         button2.addEventListener("click", homeButtonHandler);
     }
@@ -595,16 +602,23 @@ function removeTriggerEvents() {
         if (button1.classList.contains("open-quizz")) {
             button1.removeEventListener("click", visitQuizz);
         }
-
-
         if (creationPage.section[sectionIndex] === creationPage.section.settings) {
             formEvent(sectionElement, false);
         }
     }
     button2 = (sectionElement.querySelectorAll("button"))[1];
+
     if (button2.classList.contains("back-to-home")) {
         button2.removeEventListener("click", homeButtonHandler);
     }
+}
+
+function deleteQuizzOnServer(quizzId, myQuizzesKeys) {
+    axiosBase.delete(`/${quizzId}`, {
+        headers: {
+            "Secret-Key": myQuizzesKeys[quizzId]
+        }
+    }).then(backToHomePage);
 }
 
 function deleteQuizz(quizzId) {
@@ -612,11 +626,7 @@ function deleteQuizz(quizzId) {
     let myQuizzes = getUserQuizzesIDs();
     let idIndex = myQuizzes.indexOf(quizzId);
 
-    axiosBase.delete(`/${quizzId}`, {
-        headers: {
-            "Secret-Key": myQuizzesKeys[quizzId]
-        }
-    }).then(backToHomePage);
+    deleteQuizzOnServer(quizzId, myQuizzesKeys);
     myQuizzes.splice(idIndex, 1);
     delete (myQuizzesKeys[quizzId]);
 
@@ -624,8 +634,7 @@ function deleteQuizz(quizzId) {
     setUserQuizzesKeys(myQuizzesKeys);
 }
 
-function editQuizz(quizzId) {
-    startCreation();
+function setEditPage(quizzId) {
     axiosBase.get(`/${quizzId}`).then((response) => {
         let settingsSection = getSectionElement([creationPage.section.settings]);
         let settingInputs = settingsSection.querySelectorAll("input");
@@ -639,4 +648,9 @@ function editQuizz(quizzId) {
     });
 }
 
-export { activeTriggerEvents, removeTriggerEvents, deleteQuizz, editQuizz };
+function editQuizz(quizzId) {
+    startCreation();
+    setEditPage(quizzId)
+}
+
+export { activeTriggerEvents, removeTriggerEvents, deleteQuizz, editQuizz, getUserQuizzesIDs, getUserQuizzesKeys };

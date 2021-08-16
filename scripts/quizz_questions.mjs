@@ -1,4 +1,4 @@
-import { quizzPageElement, axiosBase, scrollToHeader, hideLoader, hideQuizzPage, hideHomePage, hideCreationPage} from './overall.mjs';
+import { quizzPageElement, axiosBase, scrollToHeader, hideLoader, hideQuizzPage, hideHomePage, hideCreationPage } from './overall.mjs';
 import { backToHomePage } from './home.mjs';
 
 
@@ -9,42 +9,40 @@ let correctAnswersN;
 let totalNQuestions;
 let quizzScore;
 
-function resetScore(){
+function resetScore() {
     correctAnswersN = 0;
 }
 
-function restartQuizz(){
+function restartQuizz() {
     resetScore();
     scrollToHeader();
     renderQuestions();
 }
 
-function startQuizzClickEvents(){
+function startQuizzClickEvents() {
     activeQuizzElement.addEventListener('click', filterClickedElement);
     quizzPageElement.querySelector('.back-home').addEventListener('click', backToHomePage);
     quizzPageElement.querySelector('.quizz-restart').addEventListener('click', restartQuizz);
 }
 
-
-function isAnswered(event){
+function isAnswered(event) {
     let questionElement = event.parentNode.parentNode.parentNode;
-    return (questionElement.classList.contains('answered')); 
+    return (questionElement.classList.contains('answered'));
 }
 
-function isAnswer(event){
+function isAnswer(event) {
     let elementTag = event.parentNode.tagName;
     return (elementTag === 'LI');
 }
 
-function filterClickedElement(event){
+function filterClickedElement(event) {
 
-    if (isAnswer(event.target) && !isAnswered(event.target)) { 
-            setQuestionAnswered(event.target);
+    if (isAnswer(event.target) && !isAnswered(event.target)) {
+        setQuestionAnswered(event.target);
     }
 }
 
-function startQuizz(quizzID){
-
+function startQuizz(quizzID) {
     hideHomePage(true);
     hideLoader(false);
     hideCreationPage(true);
@@ -55,11 +53,11 @@ function startQuizz(quizzID){
     resetScore();
 }
 
-function getTotalNQuestions(){
+function getTotalNQuestions() {
     totalNQuestions = activeQuizzObject.questions.length;
 }
 
-function getQuestions(quizzID){
+function getQuestions(quizzID) {
     let promise = axiosBase.get('/' + quizzID);
 
     promise.then((value) => {
@@ -73,19 +71,19 @@ function getQuestions(quizzID){
     });
 }
 
-function storeQuestions(value){
+function storeQuestions(value) {
     activeQuizzObject = value.data;
 }
 
-function renderQuestions(){
+function renderQuestions() {
     let quizzAnswers;
 
     activeQuizzElement.innerHTML = `
     <div class="quizz-header">
             <img src="${activeQuizzObject.image}" alt="">
             <h1>${activeQuizzObject.title}</h1>
-    </div>`;        
-    
+    </div>`;
+
     for (let questionN = 0; questionN < activeQuizzObject.questions.length; questionN++) {
         activeQuizzElement.innerHTML += `
         
@@ -99,7 +97,7 @@ function renderQuestions(){
         </div>
         `;
 
-        quizzAnswers = activeQuizzElement.querySelector(`.quizz-question-container:nth-child(${ 2 + questionN}) .quizz-answers`);
+        quizzAnswers = activeQuizzElement.querySelector(`.quizz-question-container:nth-child(${2 + questionN}) .quizz-answers`);
 
         sortAnswers(activeQuizzObject.questions[questionN].answers);
 
@@ -113,11 +111,9 @@ function renderQuestions(){
             `
         });
     }
-
 }
 
-function renderResult(levelIndex){
-
+function renderResult(levelIndex) {
     activeQuizzElement.innerHTML += `
         <div class="quizz-result">
             <div class="quizz-result-header">
@@ -131,70 +127,70 @@ function renderResult(levelIndex){
         </div>
     `;
 
-        let quizzResult = activeQuizzElement.querySelector('.quizz-result');
+    let quizzResult = activeQuizzElement.querySelector('.quizz-result');
 
-        unhideNextQuestion(quizzResult);
-        scrollNextQuestion(quizzResult);
+    unhideNextQuestion(quizzResult);
+    scrollNextQuestion(quizzResult);
 }
 
-function getLevelIndex () {
+function getLevelIndex() {
     let levelIndex;
-    
+
     for (let i = 0; i < activeQuizzObject.levels.length; i++) {
 
         if (quizzScore >= activeQuizzObject.levels[i].minValue) {
             levelIndex = i;
         }
-        
+
     }
-    return(levelIndex);
+    return (levelIndex);
 }
 
-function isAnswerCorrect(selectedAnswer){
+function isAnswerCorrect(selectedAnswer) {
     if (selectedAnswer.classList.contains('right-green')) {
         correctAnswersN++;
     }
 }
 
-function calcResult(){
+function calcResult() {
     quizzScore = Math.ceil((correctAnswersN / totalNQuestions) * 100);
 }
 
-function hideQuestions(questionN){
+function hideQuestions(questionN) {
     if (questionN > 0) {
         return 'hidden';
-
     }
-    else {
-        return '';
-    }
+    return '';
 }
 
-function specifyAnswerColor(isCorrectAnswer){
-    if (isCorrectAnswer){
+function specifyAnswerColor(isCorrectAnswer) {
+    if (isCorrectAnswer) {
         return 'right-green';
-
     }
-    else if(!isCorrectAnswer){
+    else if (!isCorrectAnswer) {
         return 'wrong-red';
     }
 }
 
-function scrollNextQuestion(nextQuestion){
-    nextQuestion.scrollIntoView();
+function scrollNextQuestion(nextQuestion) {
+/*     if (nextQuestion.classList.contains("quizz-result")){
+        
+    }else{
+        nextQuestion.scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
+    } */
+    nextQuestion.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
 }
 
-function unhideNextQuestion(nextQuestion){
+function unhideNextQuestion(nextQuestion) {
     nextQuestion.classList.remove('hidden');
 }
 
-function findNextQuestion(currentQuestion){
+function findNextQuestion(currentQuestion) {
     let nextQuestion = currentQuestion.nextElementSibling;
 
     if (nextQuestion == null) {
         calcResult();
-        setTimeout(renderResult,2000,getLevelIndex());
-
+        setTimeout(renderResult, 2000, getLevelIndex());
     }
     else {
         setTimeout(unhideNextQuestion, 2000, nextQuestion);
@@ -202,9 +198,9 @@ function findNextQuestion(currentQuestion){
     }
 }
 
-function setQuestionAnswered(selectedAnswer){
+function setQuestionAnswered(selectedAnswer) {
     isAnswerCorrect(selectedAnswer.parentNode);
-    
+
     selectedAnswer.parentNode.classList.add('selected');
 
     let currentQuestion = selectedAnswer.parentNode.parentNode.parentNode;
@@ -212,14 +208,12 @@ function setQuestionAnswered(selectedAnswer){
 
     findNextQuestion(currentQuestion);
 }
-    
-function sortAnswers(array){
-    array.sort(function(){
-        return Math.random() - 0.5; 
+
+function sortAnswers(array) {
+    array.sort(function () {
+        return Math.random() - 0.5;
     });
 }
-
-
 
 
 export { startQuizz, startQuizzClickEvents };
