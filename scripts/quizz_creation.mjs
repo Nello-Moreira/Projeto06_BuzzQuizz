@@ -16,7 +16,7 @@ const newQuizz = {
     id: ""
 };
 
-const creatingQuizz = true;
+let quizzToEdit = false;
 
 function getSectionElement(section) {
     const page = document.getElementById("quizz-creation");
@@ -97,7 +97,7 @@ function getUserQuizzesIDs() {
     return JSON.parse(myQuizzes);
 }
 
-function getUserQuizzesKeys(){
+function getUserQuizzesKeys() {
     const myQuizzesKeys = localStorage.getItem("myQuizzesKeys");
     if (!myQuizzesKeys) {
         return {};
@@ -105,12 +105,12 @@ function getUserQuizzesKeys(){
     return JSON.parse(myQuizzesKeys);
 }
 
-function setUserQuizzesIDs(idsArray){
+function setUserQuizzesIDs(idsArray) {
     idsArray = JSON.stringify(idsArray);
     localStorage.setItem("myQuizzes", idsArray);
 }
 
-function setUserQuizzesKeys(idsObject){
+function setUserQuizzesKeys(idsObject) {
     idsObject = JSON.stringify(idsObject);
     localStorage.setItem("myQuizzesKeys", idsObject);
 }
@@ -123,7 +123,7 @@ function saveQuizz(response) {
     myQuizzesKeys[response.data.id.toString()] = response.data.key;
     setUserQuizzesIDs(myQuizzes);
     setUserQuizzesKeys(myQuizzesKeys);
-    
+
     newQuizz.id = response.data.id;
 }
 
@@ -304,7 +304,7 @@ function createQuestionContentContainer() {
     return contentContainer;
 }
 
-function createQuestions(sectionElement, numberOfQuestions=false) {
+function createQuestions(sectionElement, numberOfQuestions = false) {
     const endOfSectioButton = sectionElement.querySelector("button");
     const settingsSection = (sectionElement.parentElement.children)[creationPage.section.settings];
     numberOfQuestions = numberOfQuestions || settingsSection.querySelector("input[type='number']").value;
@@ -406,6 +406,43 @@ function deleteLevels() {
     }
 }
 
+function fillQuestionsToEdit() {
+    let questionsSection = getSectionElement([creationPage.section.questions]);
+    let questions = questionsSection.querySelectorAll("form");
+    let formInputs;
+
+    for (let i = 0; i < quizzToEdit.questions.length; i++) {
+        if (!questions[i]) {
+            break;
+        }
+        formInputs = questions[i].querySelectorAll("input");
+        formInputs[0].value = quizzToEdit.questions[i].title;
+        formInputs[1].value = quizzToEdit.questions[i].color;
+
+        for (let j = 0; j < quizzToEdit.questions[i].answers.length; j++) {
+            formInputs[2 * j + 2].value = quizzToEdit.questions[i].answers[j].text;
+            formInputs[2 * j + 3].value = quizzToEdit.questions[i].answers[j].image;
+        }
+    }
+};
+
+function fillLevelsToEdit() {
+    let levelsSection = getSectionElement([creationPage.section.levels]);
+    let levels = levelsSection.querySelectorAll("form");
+    let formInputs;
+
+    for (let i = 0; i < quizzToEdit.levels.length; i++) {
+        if (!levels[i]) {
+            break;
+        }
+        formInputs = levels[i].querySelectorAll("input");
+        formInputs[0].value = quizzToEdit.levels[i].title;
+        formInputs[1].value = quizzToEdit.levels[i].minValue;
+        formInputs[2].value = quizzToEdit.levels[i].image;
+        formInputs[3].value = quizzToEdit.levels[i].text;
+    }
+};
+
 function openNextSection(event) {
     const button = event.target;
     const sectionElement = button.parentElement;
@@ -419,6 +456,10 @@ function openNextSection(event) {
             createQuestions(allSections[creationPage.section.questions]);
             activeHideEvent(allSections[creationPage.section.questions]);
             formEvent(allSections[creationPage.section.questions], true);
+
+            if (quizzToEdit) {
+                fillQuestionsToEdit();
+            }
         }
         if (sectionElement === allSections[creationPage.section.questions]) {
             formEvent(allSections[creationPage.section.settings], false);
@@ -426,14 +467,25 @@ function openNextSection(event) {
             createlevels(allSections[creationPage.section.levels]);
             activeHideEvent(allSections[creationPage.section.levels]);
             formEvent(allSections[creationPage.section.levels], true);
+
+            if (quizzToEdit) {
+                fillLevelsToEdit();
+            }
         }
         if (sectionElement === allSections[creationPage.section.levels]) {
             formEvent(allSections[creationPage.section.questions], false);
             refreshQuizzCoverPage(allSections[creationPage.section.endSection]);
             hideLoader(false);
 
-
-            sendQuizzToServer(createQuizzObject());
+            if (quizzToEdit) {
+                axiosBase.put(`/${quizzToEdit.id}`, {
+                    headers: {
+                        "Secret-Key": getUserQuizzesKeys(quizzId)
+                    }
+                }).then(response => quizzToEdit = false);
+            } else {
+                sendQuizzToServer(createQuizzObject());
+            }
         }
     }
 }
@@ -566,22 +618,25 @@ function deleteQuizz(quizzId) {
         }
     });
     myQuizzes.splice(idIndex, 1);
-    delete(myQuizzesKeys[quizzId]);
+    delete (myQuizzesKeys[quizzId]);
 
     setUserQuizzesIDs(myQuizzes);
     setUserQuizzesKeys(myQuizzesKeys);
 }
 
-function editQuizzHandler(response) {
-    const allSections = document.querySelector("#quizz-creation").children
-
-    const quizzSettings = allSections[creationPage.section.settings].querySelectorAll("inputs")
-    quizzSettings
-}
-
-function editQuizz(quizzId){
+function editQuizz(quizzId) {
     startCreation();
-    axiosBase.get(`/${quizzId}`).then(editQuizzHandler);
+    axiosBase.get(`/${quizzId}`).then((response) => {
+        let settingsSection = getSectionElement([creationPage.section.settings]);
+        let settingInputs = settingsSection.querySelectorAll("input");
+
+        quizzToEdit = response.data;
+
+        settingInputs[0].value = quizzToEdit.title;
+        settingInputs[1].value = quizzToEdit.image;
+        settingInputs[2].value = quizzToEdit.questions.length;
+        settingInputs[3].value = quizzToEdit.levels.length;
+    });
 }
 
 export { activeTriggerEvents, removeTriggerEvents, deleteQuizz, editQuizz };
