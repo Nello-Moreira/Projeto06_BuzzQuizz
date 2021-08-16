@@ -34,14 +34,13 @@ function quizzQuestionValues(questionsSection) {
 
         answers = [];
         for (let j = 2; j < questionInputs.length; j += 2) {
-            if (questionInputs[j].value === "") {
-                break;
+            if (questionInputs[j].value !== "") {   
+                answers.push({
+                    text: questionInputs[j].value,
+                    image: questionInputs[j + 1].value,
+                    isCorrectAnswer: j === 2
+                });
             }
-            answers.push({
-                text: questionInputs[j].value,
-                image: questionInputs[j + 1].value,
-                isCorrectAnswer: j === 2
-            });
         }
 
         questions.push({
@@ -148,6 +147,25 @@ function validation(event) {
         return;
     }
     input.classList.remove("invalid");
+
+    if (input.value !== "" && input.required === false) {
+        if (input.nextElementSibling && input.nextElementSibling.type === "url") {
+            input.nextElementSibling.required = true;
+
+            let indexToRemove = input.nextElementSibling.placeholder.indexOf('(');
+            if (indexToRemove > -1) {
+                input.nextElementSibling.placeholder = input.nextElementSibling.placeholder.slice(0, indexToRemove);
+            }
+        }
+    } else if (input.value === "" && input.required === false) {
+        if (input.nextElementSibling && input.nextElementSibling.type === "url") {
+            input.nextElementSibling.required = false;
+            if (input.nextElementSibling.placeholder.indexOf('(') === -1) {
+                input.nextElementSibling.placeholder = input.nextElementSibling.placeholder.concat("", "(opcional)");
+            }
+        }
+    }
+
 }
 
 function formEvent(sectionElement, active) {
