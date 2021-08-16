@@ -1,6 +1,8 @@
-import { startHomeClickEvents, getServerQuizzes, backToHomePage, homePageELement } from './home.mjs';
+import { startHomeClickEvents, getServerQuizzes, backToHomePage } from './home.mjs';
 import { startQuizzClickEvents, quizzPageElement } from './quizz_questions.mjs';
 import { activeTriggerEvents, removeTriggerEvents } from './quizz_creation.mjs';
+
+let homePageELement = document.querySelector('#home');
 
 let creationPageELement = document.querySelector('#quizz-creation');
 
@@ -56,4 +58,4 @@ startHomeClickEvents();
 startQuizzClickEvents();
 activeTriggerEvents();
 
-export {scrollToHeader, hideLoader, axiosBase, hideQuizzPage, hideHomePage, hideCreationPage};
+export {homePageELement, scrollToHeader, hideLoader, axiosBase, hideQuizzPage, hideHomePage, hideCreationPage};

@@ -1,8 +1,7 @@
-import { scrollToHeader, axiosBase, hideQuizzPage, hideHomePage, hideCreationPage } from './overall.mjs';
+import { homePageELement, scrollToHeader, axiosBase, hideQuizzPage, hideHomePage, hideCreationPage } from './overall.mjs';
 import { startQuizz } from './quizz_questions.mjs';
 import { deleteQuizz, editQuizz } from './quizz_creation.mjs';
 
-let homePageELement = document.querySelector('#home');
 let serverQuizzesElement = document.querySelector('.server-quizzes .quizzes-list');
 let userQuizzesElement = document.querySelector('.user-quizzes .quizzes-list');
 
@@ -213,4 +212,4 @@ function startCreation(){
     hideCreationPage(false);
 }
 
-export { homePageELement, startHomeClickEvents, getServerQuizzes, backToHomePage, startCreation };
+export { startHomeClickEvents, getServerQuizzes, backToHomePage, startCreation };
