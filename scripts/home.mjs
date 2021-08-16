@@ -1,4 +1,4 @@
-import { scrollToHeader, axiosBase, hideQuizzPage } from './overall.mjs';
+import { scrollToHeader, axiosBase, hideQuizzPage, hideHomePage, hideCreationPage } from './overall.mjs';
 import { startQuizz } from './quizz_questions.mjs';
 import { deleteQuizz, editQuizz } from './quizz_creation.mjs';
 
@@ -195,17 +195,6 @@ function getClickedQuizzID(event){
     }
 }
 
-function hideHomePage(hide){
-    if (hide === true){
-        homePageELement.classList.add('hidden');
-
-    }
-    else if (hide === false){
-        homePageELement.classList.remove('hidden');
-    }
-    
-}
-
 function backToHomePage(){
     hideCreationPage(true);
     hideQuizzPage(true);
@@ -219,23 +208,9 @@ function backToHomePage(){
     getServerQuizzes();
 }
 
-//////////////////////////////////////////////////////////////////////////////////
-///////////////////////////colocar em quizz creation ////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-let creationPageELement = document.querySelector('#quizz-creation');
-
 function startCreation(){
     hideHomePage(true);
     hideCreationPage(false);
 }
 
-function hideCreationPage(hide){
-    if (hide === true){
-        creationPageELement.classList.add('hidden');
-    }
-    else if (hide === false){
-        creationPageELement.classList.remove('hidden');
-    }
-}
-//////////////////////////////////////////////////////////////////////////////////////
-export { startHomeClickEvents, getServerQuizzes, backToHomePage, hideHomePage, hideCreationPage, startCreation };
+export { homePageELement, startHomeClickEvents, getServerQuizzes, backToHomePage, startCreation };

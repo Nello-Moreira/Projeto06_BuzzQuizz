@@ -1,5 +1,5 @@
-import { axiosBase, scrollToHeader, hideLoader, hideQuizzPage} from './overall.mjs';
-import { backToHomePage, hideHomePage, hideCreationPage } from './home.mjs';
+import { axiosBase, scrollToHeader, hideLoader, hideQuizzPage, hideHomePage, hideCreationPage} from './overall.mjs';
+import { backToHomePage } from './home.mjs';
 
 let quizzPageElement = document.querySelector('#quizz');
 let activeQuizzElement = quizzPageElement.querySelector('.active-quizz-container');
