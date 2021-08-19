@@ -1,16 +1,23 @@
-import { startHomeClickEvents, getServerQuizzes, backToHomePage } from './home.mjs';
-import { startQuizzClickEvents } from './quizz_questions.mjs';
-import { activeTriggerEvents, removeTriggerEvents } from './quizz_creation.mjs';
+//import { startHomeClickEvents, getServerQuizzes, backToHomePage } from './home.mjs';
+//import { startQuizzClickEvents } from './quizz_questions.mjs';
+//import { activeTriggerEvents, removeTriggerEvents } from './quizz_creation.mjs';
+import { getQuizz, sendQuizzToServer, changeQuizzOnServer, deleteQuizz } from './buzzquizz_api.mjs';
 
 
-let homePageELement = document.querySelector('#home');
-let quizzPageElement = document.querySelector('#quizz');
-let creationPageELement = document.querySelector('#quizz-creation');
+const newQuizz = {
+    id: ""
+};
 
-const axiosBase = axios.create({
-    baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v3/buzzquizz/quizzes',
-});
+const pages = {
+    home: document.querySelector('#home'),
+    quizz: document.querySelector('#quizz'),
+    creation: document.querySelector('#quizz-creation')
+}
 
+
+// getQuizz().then((response) => {console.log(response)}).catch((err) => {console.log(err)});
+
+/* 
 function scrollToHeader() {
     window.scrollTo(0, 0);
 }
@@ -55,5 +62,4 @@ backToHomePage();
 startHomeClickEvents();
 startQuizzClickEvents();
 activeTriggerEvents();
-
-export { homePageELement, quizzPageElement, scrollToHeader, hideLoader, axiosBase, hideQuizzPage, hideHomePage, hideCreationPage };
+*/
