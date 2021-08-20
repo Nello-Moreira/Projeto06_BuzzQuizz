@@ -1,80 +1,60 @@
-/* import { homePageELement, scrollToHeader, axiosBase, hideQuizzPage, hideHomePage, hideCreationPage } from './overall.mjs';
-import { startQuizz } from './quizz_questions.mjs';
-import { deleteQuizz, editQuizz, getUserQuizzesIDs } from './quizz_creation.mjs';
+import { getQuizz, deleteQuizz, getUserQuizzes } from './buzzquizz_api.mjs';
 
-
-let serverQuizzesElement = document.querySelector('.server-quizzes .quizzes-list');
-let userQuizzesElement = document.querySelector('.user-quizzes .quizzes-list');
-
-let createdQuizzesIDs = [];
-let foundUserQuizz = false;
-let userQuizzesData = [];
-
-function hideCreateQuizzBox(hide) {
-    if (hide === true) {
-        homePageELement.querySelector('.create-quizz').classList.add('hidden');
-    }
-    else if (hide === false) {
-        homePageELement.querySelector('.create-quizz').classList.remove('hidden');
-    }
+const homePage = {
+    createQuizzBox: document.querySelector('.create-quizz'),
+    userQuizzesBox: document.querySelector('.user-quizzes'),
+    serverQuizzesBox: document.querySelector('.server-quizzes')
 }
 
-function hideUserQuizzes(hide) {
-    if (hide === true) {
-        userQuizzesElement.parentElement.classList.add('hidden');
+let auxFuncs = {};
+
+function hideCreationBox(hide) {
+    if (hide) {
+        homePage.userQuizzesBox.classList.remove('hidden');
+        homePage.createQuizzBox.classList.add('hidden');
+        return;
     }
-    else if (hide === false) {
-        userQuizzesElement.parentElement.classList.remove('hidden');
-    }
+    homePage.userQuizzesBox.classList.add('hidden');
+    homePage.createQuizzBox.classList.remove('hidden');
 }
 
 function filterUserQuizzes(quizzes) {
-    foundUserQuizz = false;
-    userQuizzesData = [];
-
-    createdQuizzesIDs = getUserQuizzesIDs();
+    let userQuizzes;
+    let otherUsersQuizzes;
+    const createdQuizzesIDs = getUserQuizzes().map(element => Number(element.id));
 
     if (createdQuizzesIDs) {
-        for (let i = quizzes.length - 1; i >= 0; i--) {
-            createdQuizzesIDs.forEach(quizzID => {
-                if (quizzID === quizzes[i].id) {
-                    foundUserQuizz = true;
-                    userQuizzesData.push(quizzes.splice(i, 1));
-                }
-            });
+        userQuizzes = quizzes.filter(element => { return createdQuizzesIDs.includes(element.id); });
+        otherUsersQuizzes = quizzes.filter(element => { return !createdQuizzesIDs.includes(element.id); });
+
+        hideCreationBox(userQuizzes.length > 0);
+
+        return {
+            userQuizzes,
+            otherUsersQuizzes
         }
     }
-    hideUserQuizzes(!foundUserQuizz);
-    hideCreateQuizzBox(foundUserQuizz);
+    return {
+        userQuizzes: [],
+        otherUsersQuizzes: quizzes
+    }
+}
+
+function quizzRendererHandler(quizzes) {
+    let quizzesObject = filterUserQuizzes(quizzes);
+    renderUserQuizzes(quizzesObject.userQuizzes);
+    renderServerQuizzes(quizzesObject.otherUsersQuizzes);
 }
 
 
-function startHomeClickEvents() {
-    serverQuizzesElement.addEventListener('click', getClickedQuizzID);
-    userQuizzesElement.addEventListener('click', getClickedQuizzID);
+function renderUserQuizzes(userQuizzes) {
+    homePage.userQuizzesBox.querySelector("ul").innerHTML = '';
 
-    homePageELement.querySelector('.create-quizz button').addEventListener('click', startCreation);
-    homePageELement.querySelector('.add-quizz-button').addEventListener('click', startCreation);
-}
-
-function getServerQuizzes() {
-    let promise = axiosBase.get();
-
-    promise.then((value) => {
-        filterUserQuizzes(value.data);
-        renderUserQuizzes();
-        renderServerQuizzes(value.data);
-    });
-}
-
-function renderUserQuizzes() {
-    userQuizzesElement.innerHTML = '';
-
-    userQuizzesData.forEach(data => {
-        userQuizzesElement.innerHTML += `
-            <li class='quizz-card' name='quizz-ID-${data[0].id}'>
-                <img src="${data[0].image}" alt="">
-                <h4>${data[0].title}</h4>
+    userQuizzes.forEach(element => {
+        homePage.userQuizzesBox.querySelector("ul").innerHTML += `
+            <li class='quizz-card' id='${element.id}'>
+                <img src="${element.image}" alt="">
+                <h4>${element.title}</h4>
                 <div class='edit-delete-box'>
                     <ion-icon class='edit-quizz-button' name="create-outline"></ion-icon>
                     <ion-icon class='delete-quizz-button' name="trash-outline"></ion-icon>
@@ -84,43 +64,45 @@ function renderUserQuizzes() {
     });
 }
 
+function renderServerQuizzes(otherUsersQuizzes) {
+    homePage.serverQuizzesBox.querySelector("ul").innerHTML = '';
 
-function renderServerQuizzes(quizzes) {
-    serverQuizzesElement.innerHTML = '';
-
-    for (let i = 0; i < quizzes.length; i++) {
-        serverQuizzesElement.innerHTML += `
-            <li class='quizz-card' name='quizz-ID-${quizzes[i].id}'>
-                <img src="${quizzes[i].image}" alt="">
-                <h4>${quizzes[i].title}</h4>
+    otherUsersQuizzes.forEach(element => {
+        homePage.serverQuizzesBox.querySelector("ul").innerHTML += `
+            <li class='quizz-card' id='${element.id}'>
+                <img src="${element.image}" alt="">
+                <h4>${element.title}</h4>
             </li>
         `
-    }
+    })
 }
 
 function renderLoaders() {
-    serverQuizzesElement.innerHTML = '';
-
-    for (let i = 0; i < 3; i++) {
-        serverQuizzesElement.innerHTML += `
+    homePage.userQuizzesBox.querySelector("ul").innerHTML = '';
+    homePage.userQuizzesBox.querySelector("ul").innerHTML += `
+        <li class="quizzes-list-loader">
+        <div class="lds-default">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        </div>
+        </li>
+        `
+    homePage.serverQuizzesBox.querySelector("ul").innerHTML = '';
+    homePage.serverQuizzesBox.querySelector("ul").innerHTML += `
             <li class="quizzes-list-loader">
                 <div class="lds-default">
                     <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
                 </div>
             </li>
         `
-    }
-    userQuizzesElement.innerHTML = '';
+}
 
-    for (let i = 0; i < 3; i++) {
-        userQuizzesElement.innerHTML += `
-            <li class="quizzes-list-loader">
-                <div class="lds-default">
-                    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-                </div>
-            </li>
-        `
-    }
+function refreshHomePage() {
+    renderLoaders();
+    window.scrollTo(0, 0);
+    getQuizz().then(response => {
+        auxFuncs.hideLoaderFunction(true);
+        quizzRendererHandler(response.data);
+    });
 }
 
 function addLoaderDeletingCard(target) {
@@ -136,14 +118,23 @@ function deletePrompt(target, clickedQuizzID) {
 
     if (deletionConfirm) {
         addLoaderDeletingCard(target);
-        deleteQuizz(clickedQuizzID);
+        deleteQuizz(clickedQuizzID).then(refreshHomePage);
     }
 }
 
-function getClickedQuizzOption(target, clickedQuizzID) {
+function editQuizz(quizzId) {
+    auxFuncs.hideLoaderFunction(false);
+    getQuizz(quizzId)
+    .then(response => {
+        auxFuncs.quizzEditionHandlerFunction(response.data)
+        auxFuncs.creationPageActivationFunction();
+        auxFuncs.hideLoaderFunction(true);
+        });
+}
 
+function getClickedQuizzOption(target, clickedQuizzID) {
     if (target.tagName === 'LI' || target.tagName === 'H4') {
-        startQuizz(clickedQuizzID);
+        auxFuncs.openQuizzFunction(clickedQuizzID);
     } else if (target.classList.contains('delete-quizz-button')) {
         deletePrompt(target, clickedQuizzID);
     } else if (target.classList.contains('edit-quizz-button')) {
@@ -151,40 +142,39 @@ function getClickedQuizzOption(target, clickedQuizzID) {
     }
 }
 
-function getClickedQuizzID(event) {
+function quizzClickHandler(event) {
     let clickedQuizzID;
 
     if (event.target.tagName === 'LI') {
-        clickedQuizzID = Number(event.target.getAttribute('name').substring(9));
+        clickedQuizzID = Number(event.target.getAttribute('id'));
     } else if (event.target.tagName === 'H4') {
-        clickedQuizzID = Number(event.target.parentElement.getAttribute('name').substring(9));
+        clickedQuizzID = Number(event.target.parentElement.getAttribute('id'));
     } else if (event.target.tagName === 'ION-ICON') {
-        clickedQuizzID = Number(event.target.parentElement.parentElement.getAttribute('name').substring(9));
+        clickedQuizzID = Number(event.target.parentElement.parentElement.getAttribute('id'));
     }
-
-    if (typeof (clickedQuizzID) === 'number') {
+    if (clickedQuizzID) {
         getClickedQuizzOption(event.target, clickedQuizzID);
     }
 }
 
-function backToHomePage() {
-    hideCreationPage(true);
-    hideQuizzPage(true);
-
-    renderLoaders();
-    hideUserQuizzes(false);
-    hideCreateQuizzBox(true);
-    hideHomePage(false);
-
-    scrollToHeader();
-    getServerQuizzes();
+function activateHomeEvents(hideLoaderFunction, openQuizzFunction, quizzEditionHandlerFunction, creationPageActivationFunction) {
+    auxFuncs = {
+        hideLoaderFunction,
+        openQuizzFunction,
+        quizzEditionHandlerFunction,
+        creationPageActivationFunction
+    }
+    homePage.userQuizzesBox.querySelector("ul").addEventListener('click', quizzClickHandler);
+    homePage.serverQuizzesBox.querySelector("ul").addEventListener('click', quizzClickHandler);
+    homePage.createQuizzBox.querySelector('button').addEventListener('click', creationPageActivationFunction);
+    document.querySelector('#home').querySelector('.add-quizz-button').addEventListener('click', creationPageActivationFunction);
 }
 
-function startCreation() {
-    hideHomePage(true);
-    hideCreationPage(false);
+function removeHomeEvents(creationPageActivationFunction) {
+    homePage.userQuizzesBox.querySelector("ul").removeEventListener('click', quizzClickHandler);
+    homePage.serverQuizzesBox.querySelector("ul").removeEventListener('click', quizzClickHandler);
+    homePage.createQuizzBox.querySelector('button').removeEventListener('click', creationPageActivationFunction);
+    homePage.userQuizzesBox.querySelector('.add-quizz-button').removeEventListener('click', creationPageActivationFunction);
 }
 
-
-export { startHomeClickEvents, getServerQuizzes, backToHomePage, startCreation };
- */
+export { activateHomeEvents, refreshHomePage };

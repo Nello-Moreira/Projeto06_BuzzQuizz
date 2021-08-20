@@ -48,7 +48,7 @@ function changeQuizzOnServer(quizzID, quizzObject) {
     return new Promise((resolve, reject) =>
         axiosBase.put(`/${quizzID}`, quizzObject, {
             headers: {
-                "Secret-Key": getUserQuizzes().find(element => element.id === quizzID).key
+                "Secret-Key": getUserQuizzes().find(element => Number(element.id) === quizzID).key
             }
         })
             .then(resolve)
@@ -60,7 +60,7 @@ function deleteQuizz(quizzId) {
     return new Promise((resolve, reject) => {
         axiosBase.delete(`/${quizzId}`, {
             headers: {
-                "Secret-Key": getUserQuizzes().find(element => element.id === quizID).key
+                "Secret-Key": getUserQuizzes().find(element => Number(element.id) === quizzId).key
             }
         })
             .then(response => {
@@ -72,4 +72,4 @@ function deleteQuizz(quizzId) {
     })
 }
 
-export { getQuizz, sendQuizzToServer, changeQuizzOnServer, deleteQuizz }
+export { getQuizz, sendQuizzToServer, changeQuizzOnServer, deleteQuizz, getUserQuizzes }

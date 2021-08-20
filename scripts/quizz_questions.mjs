@@ -1,6 +1,4 @@
-/* import { quizzPageElement, axiosBase, scrollToHeader, hideLoader, hideQuizzPage, hideHomePage, hideCreationPage } from './overall.mjs';
-import { backToHomePage } from './home.mjs';
-
+import { getQuizz } from './buzzquizz_api.mjs';
 
 let activeQuizzObject = {};
 let activeQuizzElement = document.querySelector('.active-quizz-container');
@@ -19,7 +17,7 @@ function restartQuizz() {
     renderQuestions();
 }
 
-function startQuizzClickEvents() {
+function activateQuizzEvents() {
     activeQuizzElement.addEventListener('click', filterClickedElement);
 }
 
@@ -208,6 +206,4 @@ function sortAnswers(array) {
     });
 }
 
-
-export { startQuizz, startQuizzClickEvents };
- */
+export { startQuizz, activateQuizzEvents };

@@ -1,3 +1,5 @@
+import { sendQuizzToServer, changeQuizzOnServer } from './buzzquizz_api.mjs';
+
 const creationPage = {
     settings: document.getElementById("quizz-creation").children[0],
     questions: document.getElementById("quizz-creation").children[1],
@@ -6,6 +8,12 @@ const creationPage = {
 };
 
 let quizzToEdit = false;
+
+const actualQuizz = {
+    id: ""
+};
+
+let auxFuncs = {};
 
 function getQuestionValues() {
     const questions = [];
@@ -25,13 +33,11 @@ function getQuestionValues() {
                 });
             }
         }
-
         questions.push({
             title: questionInputs[0].value,
             color: questionInputs[1].value,
             answers
         })
-
     })
     return questions;
 }
@@ -87,11 +93,12 @@ function deleteLevels() {
 function validation(event) {
     const input = event.target;
     let dummy = input.parentElement;
+    let form;
 
     while (dummy.tagName !== "FORM") {
         dummy = dummy.parentElement;
     }
-    const form = dummy;
+    form = dummy;
 
     if (!input.validity.valid) {
         input.classList.add("invalid")
@@ -135,9 +142,7 @@ function checkIfAllValid(section) {
     let formElement;
     let questionElement;
 
-    for (let formIndex = 0; formIndex < forms.length; formIndex++) {
-        formElement = forms[formIndex];
-
+    forms.forEach(formElement => {
         if (!formElement.reportValidity()) {
             if (formElement.classList.contains("hidden")) {
                 questionElement = formElement.parentElement
@@ -145,7 +150,7 @@ function checkIfAllValid(section) {
             }
             return false;
         }
-    }
+    })
     return true;
 }
 
@@ -231,7 +236,6 @@ function createTitleContainer(questionNumber, answerOrLevel) {
     } else {
         throw "No such possibility for 'answerOrLevel'";
     }
-
     editionIcon.classList.add("hidden");
     editionIcon.src = "./assets/edit.png";
 
@@ -258,9 +262,7 @@ function createQuestionContainer(questionClasses) {
     questionColorInput.pattern = "#([A-f]|[0-9]){6}";
     questionColorInput.required = true;
 
-    for (let singleClass of questionClasses) {
-        questionContainer.classList.add(singleClass);
-    }
+    questionClasses.forEach(elementClass => questionContainer.classList.add(elementClass));
 
     questionContainer.appendChild(questionTextInput);
     questionContainer.appendChild(questionColorInput);
@@ -298,9 +300,8 @@ function createAnswers(numberOfAnswers, answerClasses) {
             answerTextInput.required = true;
             answerImgInput.required = true;
         }
-        for (let singleClass of answerClasses) {
-            li.classList.add(singleClass);
-        }
+        answerClasses.forEach(elementClass => li.classList.add(elementClass));
+
         li.appendChild(answerTextInput);
         li.appendChild(answerImgInput);
         ul.appendChild(li);
@@ -373,7 +374,6 @@ function createLevelContentContainer(levelNumber) {
         levelPercentageInput.min = 1;
         levelPercentageInput.max = 100;
     }
-
     levelimgInput.type = "url";
     levelimgInput.placeholder = "URL da imagem do nível"
     levelimgInput.required = true;
@@ -463,8 +463,7 @@ function openNextSection(event) {
             if (quizzToEdit) {
                 fillQuestions();
             }
-        }
-        if (sectionElement === creationPage.questions) {
+        } else if (sectionElement === creationPage.questions) {
             formEvent(creationPage.settings, false);
 
             createlevels();
@@ -474,12 +473,13 @@ function openNextSection(event) {
             if (quizzToEdit) {
                 fillLevels();
             }
-        }
-        if (sectionElement === creationPage.levels) {
+        } else if (sectionElement === creationPage.levels) {
             formEvent(creationPage.questions, false);
             refreshQuizzCoverPage();
         }
+        return true;
     }
+    return false;
 }
 
 function resetCreationPage() {
@@ -492,19 +492,54 @@ function resetCreationPage() {
     deleteLevels();
 }
 
-function activeCreationEvents(sendQuizzFunction, visitQuizzFunction, goToHomeFunction) {
+function endQuizzButtonHandler(event) {
+    auxFuncs.loaderFunction(false);
+    let changed = openNextSection(event);
+
+    if(!changed) {
+        return;
+    }
+    
+    if (quizzToEdit) {
+        changeQuizzOnServer(quizzToEdit.id, createQuizzObject())
+            .then(response => auxFuncs.loaderFunction(true));
+    } else {
+        sendQuizzToServer(createQuizzObject())
+            .then(response => {
+                actualQuizz.id = response.data.id;
+                auxFuncs.loaderFunction(true);
+            });
+    }
+    quizzToEdit = false;
+}
+
+function openQuizz(event) {
+    auxFuncs.loaderFunction(false);
+    resetCreationPage()
+    auxFuncs.openQuizzFunction(actualQuizz.id);
+}
+
+function homeButtonHandler(event) {
+    auxFuncs.loaderFunction(false);
+    resetCreationPage();
+    auxFuncs.homePageActivationFunction();
+}
+
+function activateCreationEvents(loaderFunction, openQuizzFunction, homePageActivationFunction) {
+    auxFuncs = {
+        loaderFunction,
+        openQuizzFunction,
+        homePageActivationFunction,
+    };
     formEvent(creationPage.settings, true);
     creationPage.settings.querySelector("button").addEventListener("click", openNextSection);
     creationPage.questions.querySelector("button").addEventListener("click", openNextSection);
-    creationPage.levels.querySelector(".end-quizz").addEventListener("click", event => {
-        openNextSection(event);
-        sendQuizzFunction(event);
-    });
-    creationPage.endSection.querySelector(".open-quizz").addEventListener("click", visitQuizzFunction);
-    creationPage.endSection.querySelector(".back-to-home").addEventListener("click", goToHomeFunction);
+    creationPage.levels.querySelector(".end-quizz").addEventListener("click", endQuizzButtonHandler);
+    creationPage.endSection.querySelector(".open-quizz").addEventListener("click", openQuizz);
+    creationPage.endSection.querySelector(".back-to-home").addEventListener("click", homeButtonHandler);
 }
 
-function removeCreationEvents(sendQuizzFunction, visitQuizzFunction, goToHomeFunction) {
+function removeCreationEvents(sendQuizzFunction, openQuizzFunction, homePageActivationFunction) {
     formEvent(creationPage.settings, false);
     creationPage.settings.querySelector("button").removeEventListener("click", openNextSection);
     creationPage.questions.querySelector("button").removeEventListener("click", openNextSection);
@@ -513,7 +548,7 @@ function removeCreationEvents(sendQuizzFunction, visitQuizzFunction, goToHomeFun
         sendQuizzFunction(event);
     });
     creationPage.endSection.querySelector(".open-quizz").removeEventListener("click", visitQuizzFunction);
-    creationPage.endSection.querySelector(".back-to-home").removeEventListener("click", goToHomeFunction);
+    creationPage.endSection.querySelector(".back-to-home").removeEventListener("click", homePageActivationFunction);
 }
 
-export { activeCreationEvents, removeCreationEvents, resetCreationPage, quizzEditionHandler, createQuizzObject };
+export { activateCreationEvents, removeCreationEvents, quizzEditionHandler };
