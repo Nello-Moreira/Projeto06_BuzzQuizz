@@ -1,4 +1,4 @@
-import { homePageELement, scrollToHeader, axiosBase, hideQuizzPage, hideHomePage, hideCreationPage } from './overall.mjs';
+/* import { homePageELement, scrollToHeader, axiosBase, hideQuizzPage, hideHomePage, hideCreationPage } from './overall.mjs';
 import { startQuizz } from './quizz_questions.mjs';
 import { deleteQuizz, editQuizz, getUserQuizzesIDs } from './quizz_creation.mjs';
 
@@ -187,3 +187,4 @@ function startCreation() {
 
 
 export { startHomeClickEvents, getServerQuizzes, backToHomePage, startCreation };
+ */

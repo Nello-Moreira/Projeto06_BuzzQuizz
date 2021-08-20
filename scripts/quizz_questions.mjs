@@ -1,4 +1,4 @@
-import { quizzPageElement, axiosBase, scrollToHeader, hideLoader, hideQuizzPage, hideHomePage, hideCreationPage } from './overall.mjs';
+/* import { quizzPageElement, axiosBase, scrollToHeader, hideLoader, hideQuizzPage, hideHomePage, hideCreationPage } from './overall.mjs';
 import { backToHomePage } from './home.mjs';
 
 
@@ -21,8 +21,6 @@ function restartQuizz() {
 
 function startQuizzClickEvents() {
     activeQuizzElement.addEventListener('click', filterClickedElement);
-    quizzPageElement.querySelector('.back-home').addEventListener('click', backToHomePage);
-    quizzPageElement.querySelector('.quizz-restart').addEventListener('click', restartQuizz);
 }
 
 function isAnswered(event) {
@@ -173,11 +171,6 @@ function specifyAnswerColor(isCorrectAnswer) {
 }
 
 function scrollNextQuestion(nextQuestion) {
-/*     if (nextQuestion.classList.contains("quizz-result")){
-        
-    }else{
-        nextQuestion.scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"});
-    } */
     nextQuestion.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
 }
 
@@ -217,3 +210,4 @@ function sortAnswers(array) {
 
 
 export { startQuizz, startQuizzClickEvents };
+ */
