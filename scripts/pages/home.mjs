@@ -1,10 +1,5 @@
-import { getQuizz, deleteQuizz, getUserQuizzes } from './buzzquizz_api.mjs';
-
-const homePage = {
-    createQuizzBox: document.querySelector('.create-quizz'),
-    userQuizzesBox: document.querySelector('.user-quizzes'),
-    serverQuizzesBox: document.querySelector('.server-quizzes')
-}
+import { getQuizz, deleteQuizz, getUserQuizzes } from '../api/buzzquizz_api.mjs';
+import { pages, homePage, activatePage } from '../auxiliar/auxiliar.mjs';
 
 let auxFuncs = {};
 
@@ -77,30 +72,11 @@ function renderServerQuizzes(otherUsersQuizzes) {
     })
 }
 
-function renderLoaders() {
-    homePage.userQuizzesBox.querySelector("ul").innerHTML = '';
-    homePage.userQuizzesBox.querySelector("ul").innerHTML += `
-        <li class="quizzes-list-loader">
-        <div class="lds-default">
-        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-        </div>
-        </li>
-        `
-    homePage.serverQuizzesBox.querySelector("ul").innerHTML = '';
-    homePage.serverQuizzesBox.querySelector("ul").innerHTML += `
-            <li class="quizzes-list-loader">
-                <div class="lds-default">
-                    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-                </div>
-            </li>
-        `
-}
-
 function refreshHomePage() {
-    renderLoaders();
+    activatePage(pages.loader);
     window.scrollTo(0, 0);
     getQuizz().then(response => {
-        auxFuncs.hideLoaderFunction(true);
+        activatePage(pages.home);
         quizzRendererHandler(response.data);
     });
 }
@@ -123,12 +99,11 @@ function deletePrompt(target, clickedQuizzID) {
 }
 
 function editQuizz(quizzId) {
-    auxFuncs.hideLoaderFunction(false);
+    activatePage(pages.loader);
     getQuizz(quizzId)
-    .then(response => {
-        auxFuncs.quizzEditionHandlerFunction(response.data)
-        auxFuncs.creationPageActivationFunction();
-        auxFuncs.hideLoaderFunction(true);
+        .then(response => {
+            auxFuncs.quizzEditionHandlerFunction(response.data)
+            activatePage(pages.creation);
         });
 }
 
@@ -157,24 +132,16 @@ function quizzClickHandler(event) {
     }
 }
 
-function activateHomeEvents(hideLoaderFunction, openQuizzFunction, quizzEditionHandlerFunction, creationPageActivationFunction) {
+function activateHomeEvents(openQuizzFunction, quizzEditionHandlerFunction) {
     auxFuncs = {
-        hideLoaderFunction,
         openQuizzFunction,
         quizzEditionHandlerFunction,
-        creationPageActivationFunction
     }
+    refreshHomePage();
     homePage.userQuizzesBox.querySelector("ul").addEventListener('click', quizzClickHandler);
     homePage.serverQuizzesBox.querySelector("ul").addEventListener('click', quizzClickHandler);
-    homePage.createQuizzBox.querySelector('button').addEventListener('click', creationPageActivationFunction);
-    document.querySelector('#home').querySelector('.add-quizz-button').addEventListener('click', creationPageActivationFunction);
-}
-
-function removeHomeEvents(creationPageActivationFunction) {
-    homePage.userQuizzesBox.querySelector("ul").removeEventListener('click', quizzClickHandler);
-    homePage.serverQuizzesBox.querySelector("ul").removeEventListener('click', quizzClickHandler);
-    homePage.createQuizzBox.querySelector('button').removeEventListener('click', creationPageActivationFunction);
-    homePage.userQuizzesBox.querySelector('.add-quizz-button').removeEventListener('click', creationPageActivationFunction);
+    homePage.createQuizzBox.querySelector('button').addEventListener('click', () => { activatePage(pages.creation) });
+    pages.home.querySelector('.add-quizz-button').addEventListener('click', () => { activatePage(pages.creation) });
 }
 
 export { activateHomeEvents, refreshHomePage };

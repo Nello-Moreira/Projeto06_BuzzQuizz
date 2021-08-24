@@ -1,4 +1,5 @@
-import { getQuizz } from './buzzquizz_api.mjs';
+import { pages, activatePage } from '../auxiliar/auxiliar.mjs';
+import { getQuizz } from '../api/buzzquizz_api.mjs';
 
 let activeQuizzObject = {};
 let activeQuizzElement = document.querySelector('.active-quizz-container');
@@ -13,12 +14,8 @@ function resetScore() {
 
 function restartQuizz() {
     resetScore();
-    scrollToHeader();
+    document.querySelector(".quizz-question-container").scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
     renderQuestions();
-}
-
-function activateQuizzEvents() {
-    activeQuizzElement.addEventListener('click', filterClickedElement);
 }
 
 function isAnswered(event) {
@@ -39,36 +36,19 @@ function filterClickedElement(event) {
 }
 
 function startQuizz(quizzID) {
-    hideHomePage(true);
-    hideLoader(false);
-    hideCreationPage(true);
-
-    getQuestions(quizzID);
-
-    scrollToHeader();
+    getQuizz(quizzID)
+        .then((response) => {
+            activeQuizzObject = response.data;
+            getTotalNQuestions();
+            renderQuestions(activeQuizzObject);
+        })
+    activatePage(pages.quizz);
+    window.scrollTo(0, 0);
     resetScore();
 }
 
 function getTotalNQuestions() {
     totalNQuestions = activeQuizzObject.questions.length;
-}
-
-function getQuestions(quizzID) {
-    let promise = axiosBase.get('/' + quizzID);
-
-    promise.then((value) => {
-        storeQuestions(value);
-
-        getTotalNQuestions();
-        hideLoader(true);
-        hideQuizzPage(false);
-
-        renderQuestions(activeQuizzObject);
-    });
-}
-
-function storeQuestions(value) {
-    activeQuizzObject = value.data;
 }
 
 function renderQuestions() {
@@ -169,7 +149,7 @@ function specifyAnswerColor(isCorrectAnswer) {
 }
 
 function scrollNextQuestion(nextQuestion) {
-    nextQuestion.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+    nextQuestion.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
 }
 
 function unhideNextQuestion(nextQuestion) {
@@ -201,9 +181,13 @@ function setQuestionAnswered(selectedAnswer) {
 }
 
 function sortAnswers(array) {
-    array.sort(function () {
-        return Math.random() - 0.5;
-    });
+    array.sort(() => Math.random() - 0.5);
+}
+
+function activateQuizzEvents(refreshHomePageFunction) {
+    activeQuizzElement.addEventListener('click', filterClickedElement);
+    pages.quizz.querySelector('.back-home').addEventListener('click', refreshHomePageFunction);
+    pages.quizz.querySelector('.quizz-restart').addEventListener('click', restartQuizz);
 }
 
 export { startQuizz, activateQuizzEvents };
