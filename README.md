@@ -2,10 +2,10 @@
 A [**BuzzFeed**](https://www.buzzfeed.com/) like project.
 
 This is the 6th project made to 
-"[bootcamp de desenvolvimento web full stack - Responde aí/Driven](https://page.respondeai.com.br/bootcamp)" 
+"[bootcamp de desenvolvimento web full stack - Responde aí/Driven](https://driven.com.br/)" 
 (full-stack web development).
 
-This project is developed with collaboration of [Deltinha](https://github.com/deltinha).
+This project was developed with collaboration of [Deltinha](https://github.com/deltinha).
 
 # Technologies
 * HTML 
