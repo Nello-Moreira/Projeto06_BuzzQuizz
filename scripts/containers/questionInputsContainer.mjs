@@ -17,8 +17,7 @@ function createQuestionContainer(questionClasses) {
 
     questionClasses.forEach(elementClass => questionContainer.classList.add(elementClass));
 
-    questionContainer.appendChild(questionTextInput);
-    questionContainer.appendChild(questionColorInput);
+    questionContainer.append(questionTextInput, questionColorInput);
 
     return questionContainer;
 }
@@ -55,9 +54,8 @@ function createAnswers(numberOfAnswers, answerClasses) {
         }
         answerClasses.forEach(elementClass => li.classList.add(elementClass));
 
-        li.appendChild(answerTextInput);
-        li.appendChild(answerImgInput);
-        ul.appendChild(li);
+        li.append(answerTextInput, answerImgInput);
+        ul.append(li);
     }
     return ul;
 }
@@ -75,11 +73,13 @@ function createQuestionContentContainer() {
 
     contentContainer.classList.add("question-content-container");
 
-    contentContainer.appendChild(questionInputsContainer);
-    contentContainer.appendChild(correctAnswerTitle);
-    contentContainer.appendChild(correctAnswerContainer);
-    contentContainer.appendChild(wrongAnswerTitle);
-    contentContainer.appendChild(wrongAnswersContainer);
+    contentContainer.append(
+        questionInputsContainer,
+        correctAnswerTitle,
+        correctAnswerContainer,
+        wrongAnswerTitle,
+        wrongAnswersContainer
+    )
 
     return contentContainer;
 }
@@ -94,8 +94,10 @@ function createQuestions(quizzToEdit) {
         questionContainer = document.createElement("div");
         questionContainer.classList.add("question");
 
-        questionContainer.appendChild(createTitleContainer(i + 1, "answer"));
-        questionContainer.appendChild(createQuestionContentContainer());
+        questionContainer.append(
+            createTitleContainer(i + 1, "answer"),
+            createQuestionContentContainer()
+        );
         sectionElement.insertBefore(questionContainer, endOfSectioButton);
 
         if (i !== 0) {

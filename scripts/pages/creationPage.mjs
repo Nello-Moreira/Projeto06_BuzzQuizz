@@ -1,8 +1,7 @@
 import { sendQuizzToServer, changeQuizzOnServer } from '../api/buzzquizz_api.mjs';
-import { createQuestions, deleteQuestions } from '../containers/questionContainer.mjs';
-import { createLevels, deleteLevels } from '../containers/levelContainer.mjs';
+import { createQuestions, deleteQuestions } from '../containers/questionInputsContainer.mjs';
+import { createLevels, deleteLevels } from '../containers/levelInputsContainer.mjs';
 import { pages, creationPage, activatePage, changeVisibility } from '../auxiliar/auxiliar.mjs';
-
 
 let quizzToEdit = false;
 
@@ -56,15 +55,24 @@ function quizzLevelsValues() {
     return levels;
 }
 
-function createQuizzObject() {
-    const settingsForm = creationPage.settings.querySelector("form");
+function changeInputPlaceholder(input, required) {
+    if (required) {
+        let indexToRemove = input.placeholder.indexOf('(');
 
-    return {
-        title: settingsForm.querySelector("input[type=text]").value,
-        image: settingsForm.querySelector("input[type=url]").value,
-        questions: getQuestionValues(),
-        levels: quizzLevelsValues()
-    };
+        input.placeholder = input.placeholder.slice(0, indexToRemove);
+        return;
+    }
+    input.placeholder = input.placeholder.concat("", "(opcional)");
+}
+
+function changeSiblingsRequirement(input, required) {
+    const parentElement = input.parentElement;
+    const siblings = parentElement.childNodes;
+    
+    siblings.forEach(sibling=>{
+        sibling.required = required;
+        changeInputPlaceholder(sibling, required);
+    })
 }
 
 function validation(event) {
@@ -77,30 +85,20 @@ function validation(event) {
     }
     form = dummy;
 
+    const wrongAnswers = form.querySelectorAll("wrong-answer");
+    
+    if (input.value !== "" && input.parentNode !== wrongAnswers[0]) {
+        changeSiblingsRequirement(input, true);
+    } else if (input.value === "" && input.parentNode !== wrongAnswers[0]) {
+        changeSiblingsRequirement(input, false);
+    }
+    
     if (!input.validity.valid) {
         input.classList.add("invalid")
         form.reportValidity();
         return;
     }
     input.classList.remove("invalid");
-
-    if (input.value !== "" && input.required === false) {
-        if (input.nextElementSibling && input.nextElementSibling.type === "url") {
-            input.nextElementSibling.required = true;
-
-            let indexToRemove = input.nextElementSibling.placeholder.indexOf('(');
-            if (indexToRemove > -1) {
-                input.nextElementSibling.placeholder = input.nextElementSibling.placeholder.slice(0, indexToRemove);
-            }
-        }
-    } else if (input.value === "" && input.required === false) {
-        if (input.nextElementSibling && input.nextElementSibling.type === "url") {
-            input.nextElementSibling.required = false;
-            if (input.nextElementSibling.placeholder.indexOf('(') === -1) {
-                input.nextElementSibling.placeholder = input.nextElementSibling.placeholder.concat("", "(opcional)");
-            }
-        }
-    }
 }
 
 function formEvent(section, active) {
@@ -111,23 +109,6 @@ function formEvent(section, active) {
         return;
     }
     forms.forEach(element => element.removeEventListener("change", validation));
-}
-
-function checkIfAllValid(section) {
-    const forms = section.querySelectorAll("form");
-    let questionElement;
-    let valid = true;
-
-    forms.forEach(formElement => {
-        if (!formElement.reportValidity()) {
-            if (formElement.classList.contains("hidden")) {
-                questionElement = formElement.parentElement
-                questionElement.classList.add("invalid");
-            }
-            valid = false;
-        }
-    })
-    return valid;
 }
 
 function fillSettings() {
@@ -206,6 +187,23 @@ function setNextSection(nextSection) {
     }
 }
 
+function checkIfAllValid(section) {
+    const forms = section.querySelectorAll("form");
+    let questionElement;
+    let valid = true;
+
+    forms.forEach(formElement => {
+        if (!formElement.reportValidity()) {
+            if (formElement.classList.contains("hidden")) {
+                questionElement = formElement.parentElement
+                questionElement.classList.add("invalid");
+            }
+            valid = false;
+        }
+    })
+    return valid;
+}
+
 function openNextSection(event) {
     const button = event.target;
     const sectionElement = button.parentElement;
@@ -231,6 +229,17 @@ function resetCreationPage() {
     deleteLevels();
 }
 
+function createQuizzObject() {
+    const settingsForm = creationPage.settings.querySelector("form");
+
+    return {
+        title: settingsForm.querySelector("input[type=text]").value,
+        image: settingsForm.querySelector("input[type=url]").value,
+        questions: getQuestionValues(),
+        levels: quizzLevelsValues()
+    };
+}
+
 function endQuizzButtonHandler(event) {
     activatePage(pages.loader);
     let changed = openNextSection(event);
@@ -243,7 +252,8 @@ function endQuizzButtonHandler(event) {
         changeQuizzOnServer(quizzToEdit.id, createQuizzObject())
             .then(response => {
                 actualQuizz.id = response.data.id;
-                activatePage(pages.creation)});
+                activatePage(pages.creation)
+            });
     } else {
         sendQuizzToServer(createQuizzObject())
             .then(response => {

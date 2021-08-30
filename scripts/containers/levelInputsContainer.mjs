@@ -36,16 +36,13 @@ function createLevelContentContainer(levelNumber) {
     contentContainer.classList.add("question-content-container");
     contentContainer.classList.add("inputs");
 
-    contentContainer.appendChild(levelTitleInput);
-    contentContainer.appendChild(levelPercentageInput);
-    contentContainer.appendChild(levelimgInput);
-    contentContainer.appendChild(levelDescriptionInput);
+    contentContainer.append(levelTitleInput, levelPercentageInput, levelimgInput, levelDescriptionInput)
 
     return contentContainer;
 }
 
 function fillLevels(quizzToEdit) {
-    if (!quizzToEdit){
+    if (!quizzToEdit) {
         return;
     }
 
@@ -74,8 +71,10 @@ function createLevels(quizzToEdit) {
         levelContainer = document.createElement("div");
         levelContainer.classList.add("level");
 
-        levelContainer.appendChild(createTitleContainer(i + 1, "level"));
-        levelContainer.appendChild(createLevelContentContainer(i + 1));
+        levelContainer.append(
+            createTitleContainer(i + 1, "level"),
+            createLevelContentContainer(i + 1)
+        );
         sectionElement.insertBefore(levelContainer, endOfSectioButton);
 
         if (i !== 0) {
