@@ -1,5 +1,5 @@
 const axiosBase = axios.create({
-    baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v2/buzzquizz/quizzes',
+    baseURL: 'https://mock-api.bootcamp.respondeai.com.br/api/v3/buzzquizz/quizzes',
 });
 
 function getUserQuizzes() {
